@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>David Whitney</authors>
+    <owners>$author$</owners>
+    <projectUrl>https://github.com/davidwhitney/System.Configuration.Abstractions</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<summary>Interfaced wrappers around System Configuration ConfigurationManager with support for extensibility points and strongly typed helpers.</summary>
+    <description>$description$</description>
+    <copyright>Copyright 2013</copyright>
+    <tags>ConfigurationManager Abstraction System.Configuration</tags>
+  </metadata>
+	<files>	  
+	  <file src="bin\Release\*.pdb" target="lib\net45" /> 
+	</files> 
+</package>
