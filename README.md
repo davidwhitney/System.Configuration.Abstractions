@@ -10,10 +10,12 @@ After writing these wrappers several thousand times, and being inspired by the e
 
 # Why Do I Need It?
 
-Want to mock/stub/whatever out your App/Web.config files? 
-Want to assert that the values from configuration are *really* configuring your application?
-Want to add custom hooks around loading configuration values?
-Want stronger typing?
+* Want to mock/stub/whatever out your App/Web.config files? 
+* Want to assert that the values from configuration are *really* configuring your application?
+* Want to add custom hooks around loading configuration values?
+* Want stronger typing?
+
+This is for you.
 
 # Getting Started
 
