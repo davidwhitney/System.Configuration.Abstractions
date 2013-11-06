@@ -17,6 +17,15 @@ After writing these wrappers several thousand times, and being inspired by the e
 
 This is for you.
 
+# Where do I get it?
+
+From source: https://github.com/davidwhitney/System.Configuration.Abstractions
+By hand: https://www.nuget.org/packages/System.Configuration.Abstractions
+
+Via NuGet:
+
+		PM> Install-Package System.Configuration.Abstractions
+
 # Getting Started
 
 The simplest use case is to bind up `IConfigurationManager` to `System.Configuration.Abstractions.ConfigurationManager` in your DI container.
