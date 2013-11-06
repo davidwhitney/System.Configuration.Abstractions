@@ -63,3 +63,7 @@ There are several other useful scenarios (auditing and logging, substitution, mu
 # Contributing
 
 Send a pull request with a passing test for any bugs or interesting extension ideas.
+
+# Credits
+
+David Whitney
