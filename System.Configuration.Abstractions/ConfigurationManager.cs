@@ -7,12 +7,13 @@ namespace System.Configuration.Abstractions
         public IAppSettingsExtended AppSettings { get;  set; }
         public ConnectionStringSettingsCollection ConnectionStrings { get; set; }
 
-        public static ConfigurationManager Instance { get { return StaticAccessor.Value; } }
-        private static Lazy<ConfigurationManager> StaticAccessor { get; set; }
+        [Obsolete("Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper")]
+        public static IConfigurationManagerExtended Instance { get { return StaticAccessor.Value; } }
+        private static Lazy<IConfigurationManagerExtended> StaticAccessor { get; set; }
 
         static ConfigurationManager()
         {
-            StaticAccessor = new Lazy<ConfigurationManager>(() => new ConfigurationManager());
+            StaticAccessor = new Lazy<IConfigurationManagerExtended>(() => new ConfigurationManager());
         }
 
         public ConfigurationManager() :
