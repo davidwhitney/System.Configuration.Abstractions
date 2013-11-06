@@ -24,6 +24,8 @@ Alternatively, you can use `System.Configuration.Abstractions.ConfigurationManag
 
 If you want to directly switch out calls to `System.Configuration.ConfigurationManager` in-place, to take advantage of the strongly typed extensions and `IConfigurationInterceptors` you can replace calls to `System.Configuration.ConfigurationManager` with calls to `System.Configuration.Abstractions.ConfigurationManager.Instance` in-line, and your code should function identically.
 
+Lastly, you can just new up an instance of `System.Configuration.Abstractions.ConfigurationManager` anywhere, using its default constructor, and everything'll be just fine.
+
 # Value Added Features!
 
 The `IAppSettingsExtended` interface, which our `AppSettingsExtended` class implements, contains two new methods:
@@ -38,7 +40,7 @@ These strongly typed "AppSetting" helpers, will convert any primitive types that
 
 # Extensibility - IConfigurationInterceptors
 
-`IConfigurationInterceptor` are hooks that if registered, allow you to intercept and manipulate the values retrieved from configuration.
+`IConfigurationInterceptor`'s are hooks that, if registered, allow you to intercept and manipulate the values retrieved from configuration.
 
 To wire up an `IConfigurationInterceptor`, first, implement one, then call the static method `ConfigurationManager.RegisterInterceptors(interceptor);`
 Your interceptors are singletons, so keep them free of instance variables, as they are not thread safe.
