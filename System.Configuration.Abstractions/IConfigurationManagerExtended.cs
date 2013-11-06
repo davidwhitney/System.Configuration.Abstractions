@@ -1,6 +1,6 @@
 ﻿namespace System.Configuration.Abstractions
 {
-    public interface IConfigurationManagerExtended : IConfigurationManager
+    public interface IConfigurationManagerExtended
     {
         T GetSection<T>(string sectionName);
     }

@@ -3,9 +3,9 @@ using System.Collections.Specialized;
 
 namespace System.Configuration.Abstractions
 {
-    public class ConfigurationManager : IConfigurationManagerExtended
+    public class ConfigurationManager : IConfigurationManager
     {
-        public IAppSettingsExtended AppSettings { get;  set; }
+        public IAppSettings AppSettings { get; set; }
         public ConnectionStringSettingsCollection ConnectionStrings { get; set; }
         public static List<IConfigurationInterceptor> Interceptors { get; private set; }
         
@@ -82,7 +82,7 @@ namespace System.Configuration.Abstractions
         }
 
         [Obsolete("Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper")]
-        public static IConfigurationManagerExtended Instance
+        public static IConfigurationManager Instance
         {
             get { return new ConfigurationManager(); }
         }

@@ -1,8 +1,8 @@
 ﻿namespace System.Configuration.Abstractions
 {
-    public interface IConfigurationManager
+    public interface IConfigurationManager : IConfigurationManagerExtended
     {
-        IAppSettingsExtended AppSettings { get; set; }
+        IAppSettings AppSettings { get; set; }
         ConnectionStringSettingsCollection ConnectionStrings { get; set; }
         object GetSection(string sectionName);
         void RefreshSection(string sectionName);

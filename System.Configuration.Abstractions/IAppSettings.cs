@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace System.Configuration.Abstractions
 {
-    public interface IAppSettings
+    public interface IAppSettings : IAppSettingsExtended
     {
         void Add(NameValueCollection c);
         void Clear();

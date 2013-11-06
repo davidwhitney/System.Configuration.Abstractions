@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace System.Configuration.Abstractions
 {
-    public class AppSettingsExtended : NameValueCollection, IAppSettingsExtended
+    public class AppSettingsExtended : NameValueCollection, IAppSettings
     {
         private readonly List<IConfigurationInterceptor> _interceptors;
 
