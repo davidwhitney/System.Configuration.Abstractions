@@ -44,6 +44,7 @@
     <Compile Include="AppSettingsExtended.cs" />
     <Compile Include="IAppSettings.cs" />
     <Compile Include="IAppSettingsExtended.cs" />
+    <Compile Include="IConfigurationInterceptor.cs" />
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="IConfigurationManagerExtended.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

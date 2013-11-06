@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace System.Configuration.Abstractions
 {
@@ -9,16 +10,29 @@ namespace System.Configuration.Abstractions
 
         [Obsolete("Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper")]
         public static IConfigurationManagerExtended Instance { get { return StaticAccessor.Value; } }
+        public static List<IConfigurationInterceptor> Interceptors { get; private set; }
+        
         private static Lazy<IConfigurationManagerExtended> StaticAccessor { get; set; }
-
+        
         static ConfigurationManager()
         {
             StaticAccessor = new Lazy<IConfigurationManagerExtended>(() => new ConfigurationManager());
+            Interceptors = new List<IConfigurationInterceptor>();
+        }
+
+        public static void RegisterInterceptors(params IConfigurationInterceptor[] interceptors)
+        {
+            Interceptors.AddRange(interceptors);
         }
 
         public ConfigurationManager() :
             this(System.Configuration.ConfigurationManager.AppSettings,
                 System.Configuration.ConfigurationManager.ConnectionStrings)
+        {
+        }
+
+        public ConfigurationManager(NameValueCollection appSettingss)
+            : this(appSettingss, System.Configuration.ConfigurationManager.ConnectionStrings)
         {
         }
 
