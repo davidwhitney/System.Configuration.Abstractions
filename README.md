@@ -26,7 +26,9 @@ If you want to directly switch out calls to `System.Configuration.ConfigurationM
 
 Lastly, you can just new up an instance of `System.Configuration.Abstractions.ConfigurationManager` anywhere, using its default constructor, and everything'll be just fine.
 
-# Value Added Features!
+# Extra Features
+
+## Generic typed helper methods for retrieving config values
 
 The `IAppSettingsExtended` interface, which our `AppSettingsExtended` class implements, contains two new methods:
 
@@ -38,7 +40,9 @@ The `IAppSettingsExtended` interface, which our `AppSettingsExtended` class impl
     
 These strongly typed "AppSetting" helpers, will convert any primitive types that `Convert.ChangeType` supports. The most obvious use case being int / bool / float / int? / bool? from their string representations - keeping alot of noisy conversions out of your code.
 
-# Extensibility - IConfigurationInterceptors
+# Extensibility
+
+## IConfigurationInterceptors
 
 `IConfigurationInterceptor`'s are hooks that, if registered, allow you to intercept and manipulate the values retrieved from configuration.
 
@@ -47,7 +51,7 @@ Your interceptors are singletons, so keep them free of instance variables, as th
 
 Interceptors **only** fire when using the `IAppSettingsExtended` `AppSettting` and `AppSetting<T>` methods to ensure compatibility with `System.Configuration.ConfigurationManager`.
 
-# Why would I want interceptors?
+### Why would I want interceptors?
 
 An obvious example would be the presence of an appSetting looking like this:
 
@@ -56,9 +60,9 @@ An obvious example would be the presence of an appSetting looking like this:
 You could easily add an interceptor to detect and fill in `{machineName}` from an environmental variable, keeping your configuration free of painful transformations.
 There are several other useful scenarios (auditing and logging, substitution, multi-tenancy) that interceptors could be useful in.
 
-# Included, optional interceptors
+## Included Interceptors
 
-## ConfigurationSubstitutionInterceptor
+### ConfigurationSubstitutionInterceptor
 
 The `ConfigurationSubstitutionInterceptor` is bundled with the package, firstly as an example, but also as a useful configuration interceptor.
 It supports embedding any appsetting into any other.  Given:
