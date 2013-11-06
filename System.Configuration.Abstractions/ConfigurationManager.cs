@@ -24,7 +24,7 @@ namespace System.Configuration.Abstractions
 
         public ConfigurationManager(NameValueCollection appSettings, ConnectionStringSettingsCollection connectionStringSettings)
         {
-            AppSettings = new ExtendedAppSettings(appSettings);
+            AppSettings = new AppSettingsExtended(appSettings);
             ConnectionStrings = connectionStringSettings;
         }
 

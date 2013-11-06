@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationManager.cs" />
-    <Compile Include="ExtendedAppSettings.cs" />
+    <Compile Include="AppSettingsExtended.cs" />
     <Compile Include="IAppSettings.cs" />
     <Compile Include="IAppSettingsExtended.cs" />
     <Compile Include="IConfigurationManager.cs" />

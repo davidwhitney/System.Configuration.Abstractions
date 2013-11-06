@@ -2,13 +2,13 @@
 
 namespace System.Configuration.Abstractions
 {
-    public class ExtendedAppSettings : NameValueCollection, IAppSettingsExtended
+    public class AppSettingsExtended : NameValueCollection, IAppSettingsExtended
     {
-        public ExtendedAppSettings() : this(System.Configuration.ConfigurationManager.AppSettings)
+        public AppSettingsExtended() : this(System.Configuration.ConfigurationManager.AppSettings)
         {
         }
 
-        public ExtendedAppSettings(NameValueCollection appSettings)
+        public AppSettingsExtended(NameValueCollection appSettings)
         {
             Add(appSettings);
         }
