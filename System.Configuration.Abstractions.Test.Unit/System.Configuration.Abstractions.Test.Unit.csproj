@@ -36,6 +36,7 @@
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,7 +48,7 @@
     <Compile Include="AppSettingsExtendedTests.cs" />
     <Compile Include="ConfigurationManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubstitutionTests.cs" />
+    <Compile Include="Interceptors\ConfigurationSubstitutionInterceptorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\System.Configuration.Abstractions\System.Configuration.Abstractions.csproj">

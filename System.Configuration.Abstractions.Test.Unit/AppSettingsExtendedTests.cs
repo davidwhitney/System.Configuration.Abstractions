@@ -22,12 +22,12 @@ namespace System.Configuration.Abstractions.Test.Unit
         [Test]
         public void Indexer_WhenSettingExists_ReturnsSetting()
         {
-            _fakeConfig.Add("my-string", "foobar");
+            _fakeConfig.Add("key-here", "junk");
             var wrapper = new AppSettingsExtended(_fakeConfig);
 
-            var val = wrapper["my-string"];
+            var val = wrapper["key-here"];
 
-            Assert.That(val, Is.EqualTo("foobar"));
+            Assert.That(val, Is.EqualTo("junk"));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace System.Configuration.Abstractions.Test.Unit
         {
             var wrapper = new AppSettingsExtended(_fakeConfig);
 
-            var val = wrapper["my-string"];
+            var val = wrapper["key-here"];
 
             Assert.That(val, Is.Null);
         }
@@ -43,32 +43,21 @@ namespace System.Configuration.Abstractions.Test.Unit
         [Test]
         public void Setting_WhenValueExistsInConfiguration_ReturnsValueCorrectlyTyped()
         {
-            _fakeConfig.Add("my-string", "foobar");
+            _fakeConfig.Add("string", "junk");
             var wrapper = new AppSettingsExtended(_fakeConfig);
 
-            var val = wrapper.AppSetting<string>("my-string");
+            var val = wrapper.AppSetting<string>("string");
 
-            Assert.That(val, Is.EqualTo("foobar"));
-        }
-
-        [Test]
-        public void Setting_WhenValueContainsKnownReplacementTokensAndTokensDontExist_ReturnsValueAsWritten()
-        {
-            _fakeConfig.Add("my-string", "{tenant}-{env}-{domain}-{team}-{hostedzone}");
-            var wrapper = new AppSettingsExtended(_fakeConfig);
-
-            var val = wrapper.AppSetting<string>("my-string");
-
-            Assert.That(val, Is.EqualTo("{tenant}-{env}-{domain}-{team}-{hostedzone}"));
+            Assert.That(val, Is.EqualTo("junk"));
         }
 
         [Test]
         public void Setting_RequestAnInt_ConvertsSettingValue()
         {
-            _fakeConfig.Add("my-int", "123");
+            _fakeConfig.Add("int", "123");
             var wrapper = new AppSettingsExtended(_fakeConfig);
 
-            var val = wrapper.AppSetting<int>("my-int");
+            var val = wrapper.AppSetting<int>("int");
 
             Assert.That(val, Is.EqualTo(123));
         }
@@ -79,12 +68,23 @@ namespace System.Configuration.Abstractions.Test.Unit
         [TestCase("False", false)]
         public void Setting_RequestABoolean_ConvertsSettingValue(string boolValue, bool expectation)
         {
-            _fakeConfig.Add("my-bool", boolValue);
+            _fakeConfig.Add("boolean", boolValue);
             var wrapper = new AppSettingsExtended(_fakeConfig);
 
-            var val = wrapper.AppSetting<bool>("my-bool");
+            var val = wrapper.AppSetting<bool>("boolean");
 
             Assert.That(val, Is.EqualTo(expectation));
+        }
+
+        [Test]
+        public void Setting_WhenValueDoesntExistInConfiguration_ThrowsExceptionWithMissingKeyInMessage()
+        {
+            const string key = "doesnt-exist";
+            var wrapper = new AppSettingsExtended(_fakeConfig);
+
+            var ex = Assert.Throws<ConfigurationErrorsException>(() => wrapper.AppSetting<string>(key));
+
+            Assert.That(ex.Message, Is.StringContaining(key));
         }
     }
 }

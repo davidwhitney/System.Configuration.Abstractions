@@ -29,7 +29,7 @@ namespace System.Configuration.Abstractions
             }
 
             rawSetting = _interceptors.Aggregate(rawSetting,
-                (current, interceptor) => interceptor.OnSettingRetrieve(current));
+                (current, interceptor) => interceptor.OnSettingRetrieve(this, current));
 
             return (T) Convert.ChangeType(rawSetting, typeof (T));
         }

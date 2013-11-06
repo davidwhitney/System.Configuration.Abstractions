@@ -1,7 +1,9 @@
-﻿namespace System.Configuration.Abstractions
+﻿using System.Collections.Specialized;
+
+namespace System.Configuration.Abstractions
 {
     public interface IConfigurationInterceptor
     {
-        string OnSettingRetrieve(string originalValue);
+        string OnSettingRetrieve(NameValueCollection appSettings, string originalValue);
     }
 }
