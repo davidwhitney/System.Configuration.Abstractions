@@ -58,7 +58,20 @@ There are several other useful scenarios (auditing and logging, substitution, mu
 
 # Included, optional interceptors
 
-[TBC]
+## ConfigurationSubstitutionInterceptor
+
+The `ConfigurationSubstitutionInterceptor` is bundled with the package, firstly as an example, but also as a useful configuration interceptor.
+It supports embedding any appsetting into any other.  Given:
+
+    <add key="key1" value="valueOfOne" />
+    <add key="key2" value="{key1}-valueOfTwo" />
+
+With this interceptor registered, this is true:
+
+	var result = ConfigurationManager.AppSetting<string>("key2");
+	Console.WriteLine(result); // writes: valueOfOne-valueOfTwo
+	
+This interceptor will help you simplify transformed web or app config files that rely on similar / repetitive token replacements, by allowing you to override just one value, and have it nested across the rest of your configuration using the interceptor.
 
 # Contributing
 
