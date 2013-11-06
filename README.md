@@ -56,7 +56,7 @@ An obvious example would be the presence of an appSetting looking like this:
 You could easily add an interceptor to detect and fill in `{machineName}` from an environmental variable, keeping your configuration free of painful transformations.
 There are several other useful scenarios (auditing and logging, substitution, multi-tenancy) that interceptors could be useful in.
 
-# Included, optional intercepts
+# Included, optional interceptors
 
 [TBC]
 
