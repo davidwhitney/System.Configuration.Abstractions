@@ -14,12 +14,12 @@ namespace System.Configuration.Abstractions.Test.Unit
 
         #pragma warning disable 618
         [Test]
-        public void Instance_IsNotNull_IsSingleton()
+        public void Instance_ReturnsNewConfigManagerEveryTime()
         {
             var instance1 = ConfigurationManager.Instance;
             var instance2 = ConfigurationManager.Instance;
 
-            Assert.That(instance1, Is.EqualTo(instance2));
+            Assert.That(instance1, Is.Not.EqualTo(instance2));
         }
         #pragma warning restore 618
 

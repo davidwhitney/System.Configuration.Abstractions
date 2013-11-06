@@ -7,16 +7,10 @@ namespace System.Configuration.Abstractions
     {
         public IAppSettingsExtended AppSettings { get;  set; }
         public ConnectionStringSettingsCollection ConnectionStrings { get; set; }
-
-        [Obsolete("Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper")]
-        public static IConfigurationManagerExtended Instance { get { return StaticAccessor.Value; } }
         public static List<IConfigurationInterceptor> Interceptors { get; private set; }
-        
-        private static Lazy<IConfigurationManagerExtended> StaticAccessor { get; set; }
         
         static ConfigurationManager()
         {
-            StaticAccessor = new Lazy<IConfigurationManagerExtended>(() => new ConfigurationManager());
             Interceptors = new List<IConfigurationInterceptor>();
         }
 
@@ -38,7 +32,7 @@ namespace System.Configuration.Abstractions
 
         public ConfigurationManager(NameValueCollection appSettings, ConnectionStringSettingsCollection connectionStringSettings)
         {
-            AppSettings = new AppSettingsExtended(appSettings);
+            AppSettings = new AppSettingsExtended(appSettings, Interceptors);
             ConnectionStrings = connectionStringSettings;
         }
 
@@ -85,6 +79,12 @@ namespace System.Configuration.Abstractions
         public Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap)
         {
             return System.Configuration.ConfigurationManager.OpenMappedMachineConfiguration(fileMap);
+        }
+
+        [Obsolete("Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper")]
+        public static IConfigurationManagerExtended Instance
+        {
+            get { return new ConfigurationManager(); }
         }
     }
 }

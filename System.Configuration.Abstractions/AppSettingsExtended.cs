@@ -1,15 +1,15 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace System.Configuration.Abstractions
 {
     public class AppSettingsExtended : NameValueCollection, IAppSettingsExtended
     {
-        public AppSettingsExtended() : this(System.Configuration.ConfigurationManager.AppSettings)
-        {
-        }
+        private readonly List<IConfigurationInterceptor> _interceptors;
 
-        public AppSettingsExtended(NameValueCollection appSettings)
+        public AppSettingsExtended(NameValueCollection appSettings, List<IConfigurationInterceptor> interceptors = null)
         {
+            _interceptors = interceptors ?? new List<IConfigurationInterceptor>();
             Add(appSettings);
         }
 
