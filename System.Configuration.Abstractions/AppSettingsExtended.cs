@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace System.Configuration.Abstractions
 {
@@ -26,6 +27,9 @@ namespace System.Configuration.Abstractions
             {
                 throw new ConfigurationErrorsException("Calling code requested setting named " + key + " but it was not in the config file.");
             }
+
+            rawSetting = _interceptors.Aggregate(rawSetting,
+                (current, interceptor) => interceptor.OnSettingRetrieve(current));
 
             return (T) Convert.ChangeType(rawSetting, typeof (T));
         }
