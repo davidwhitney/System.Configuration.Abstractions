@@ -11,6 +11,9 @@
     <description>$description$</description>
     <copyright>Copyright 2013</copyright>
     <tags>ConfigurationManager Abstraction System.Configuration</tags>
+	<frameworkAssemblies>
+		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
+    </frameworkAssemblies>
   </metadata>
 	<files>	  
 	  <file src="bin\Release\*.pdb" target="lib\net45" /> 
