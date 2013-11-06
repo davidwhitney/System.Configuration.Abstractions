@@ -19,8 +19,8 @@ This is for you.
 
 # Where do I get it?
 
-From source: https://github.com/davidwhitney/System.Configuration.Abstractions
-By hand: https://www.nuget.org/packages/System.Configuration.Abstractions
+* From source: https://github.com/davidwhitney/System.Configuration.Abstractions
+* By hand: https://www.nuget.org/packages/System.Configuration.Abstractions
 
 Via NuGet:
 
