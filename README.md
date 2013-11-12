@@ -43,11 +43,11 @@ The `IAppSettingsExtended` interface, which our `AppSettingsExtended` class impl
 
     public interface IAppSettingsExtended
     {
-        string AppSetting(string key);
-        T AppSetting<T>(string key);
+        string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null);
+        T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null);
     }
     
-These strongly typed "AppSetting" helpers, will convert any primitive types that `Convert.ChangeType` supports. The most obvious use case being int / bool / float / int? / bool? from their string representations - keeping alot of noisy conversions out of your code.
+These strongly typed "AppSetting" helpers, will convert any primitive types that `Convert.ChangeType` supports. The most obvious use case being int / bool / float / int? / bool? from their string representations - keeping alot of noisy conversions out of your code. You can also provide an optional Func<T> which will get invoked if the key you're requesting is not found - otherwise, we'll throw an exception.
 
 # Extensibility
 
