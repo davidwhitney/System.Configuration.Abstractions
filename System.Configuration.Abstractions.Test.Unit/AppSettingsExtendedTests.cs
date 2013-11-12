@@ -41,6 +41,35 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
+        public void Setting_WhenSettingDoesNotExistAndActionSupplied_PerformsAction()
+        {
+            var wrapper = new AppSettingsExtended(_fakeConfig);
+
+            var val = wrapper.AppSetting<string>("string", () => "default thing");
+
+            Assert.That(val, Is.EqualTo("default thing"));
+        }
+
+        [Test]
+        public void Setting_WhenSettingDoesNotExistAndActionSuppliedReturnsATypedThing_ReturnsTypedThing()
+        {
+            var wrapper = new AppSettingsExtended(_fakeConfig);
+
+            var val = wrapper.AppSetting<int>("string", () => 1);
+
+            Assert.That(val, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Setting_WhenSettingDoesNotExistAndActionSuppliedThrows_Throws()
+        {
+            var wrapper = new AppSettingsExtended(_fakeConfig);
+
+            Assert.Throws<InvalidOperationException>(
+                () => wrapper.AppSetting<string>("string", () => { throw new InvalidOperationException("HA!"); }));
+        }
+
+        [Test]
         public void Setting_WhenValueExistsInConfiguration_ReturnsValueCorrectlyTyped()
         {
             _fakeConfig.Add("string", "junk");
@@ -74,6 +103,35 @@ namespace System.Configuration.Abstractions.Test.Unit
             var val = wrapper.AppSetting<bool>("boolean");
 
             Assert.That(val, Is.EqualTo(expectation));
+        }
+
+        [Test]
+        public void Setting_RequestADouble_ConvertsSettingValue()
+        {
+            _fakeConfig.Add("double", "1.0");
+            var wrapper = new AppSettingsExtended(_fakeConfig);
+
+            var val = wrapper.AppSetting<double>("double");
+
+            Assert.That(val, Is.EqualTo(1.0m));
+        }
+
+        [Test]
+        public void Setting_RequestAnInvalidDouble_ThrowsUnderlyingException()
+        {
+            _fakeConfig.Add("double", "NO DOUBLE HERE");
+            var wrapper = new AppSettingsExtended(_fakeConfig);
+
+            Assert.Throws<FormatException>(() => wrapper.AppSetting<double>("double"));
+        }
+
+        [Test]
+        public void Setting_RequestAnInvalidDoubleWithDefault_ThrowsUnderlyingException()
+        {
+            _fakeConfig.Add("double", "NO DOUBLE HERE");
+            var wrapper = new AppSettingsExtended(_fakeConfig);
+
+            Assert.Throws<FormatException>(() => wrapper.AppSetting("double", () => 1.0));
         }
 
         [Test]

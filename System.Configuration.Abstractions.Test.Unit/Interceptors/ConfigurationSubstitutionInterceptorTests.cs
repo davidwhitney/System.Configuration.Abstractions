@@ -22,7 +22,7 @@ namespace System.Configuration.Abstractions.Test.Unit.Interceptors
         {
             _fakeConfig.Add("tenant", "tenant-here");
 
-            var val = _wrapper.OnSettingRetrieve(_fakeConfig, "{tenant}");
+            var val = _wrapper.OnSettingRetrieve(_fakeConfig, "key", "{tenant}");
 
             Assert.That(val, Is.EqualTo("tenant-here"));
         }
@@ -30,7 +30,7 @@ namespace System.Configuration.Abstractions.Test.Unit.Interceptors
         [Test]
         public void OnSettingRetrieve_WhenValueContainsReplacementTokensAndKeyDoesntExist_ReturnsValueAsWritten()
         {
-            var val = _wrapper.OnSettingRetrieve(_fakeConfig, "{tenant}");
+            var val = _wrapper.OnSettingRetrieve(_fakeConfig, "key", "{tenant}");
 
             Assert.That(val, Is.EqualTo("{tenant}"));
         }

@@ -2,7 +2,7 @@
 {
     public interface IAppSettingsExtended
     {
-        string AppSetting(string key);
-        T AppSetting<T>(string key);
+        string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null);
+        T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null);
     }
 }

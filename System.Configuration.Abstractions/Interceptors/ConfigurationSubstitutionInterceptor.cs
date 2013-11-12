@@ -4,15 +4,15 @@ namespace System.Configuration.Abstractions.Interceptors
 {
     public class ConfigurationSubstitutionInterceptor : IConfigurationInterceptor
     {
-        public string OnSettingRetrieve(NameValueCollection appSettings, string originalValue)
+        public string OnSettingRetrieve(NameValueCollection appSettings, string key, string originalValue)
         {
-            foreach (var key in appSettings.AllKeys)
+            foreach (var thisKey in appSettings.AllKeys)
             {
-                var token = "{" + key + "}";
+                var token = "{" + thisKey + "}";
 
                 if (originalValue.Contains(token))
                 {
-                    originalValue = originalValue.Replace(token, appSettings[key]);
+                    originalValue = originalValue.Replace(token, appSettings[thisKey]);
                 }
             }
 
