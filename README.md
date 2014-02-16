@@ -1,4 +1,4 @@
-System.Configuration.Abstractions
+System.Configuration.Abstractions [![Build status](https://ci.appveyor.com/api/projects/status?id=ngl0cknxt74bfnve)](https://ci.appveyor.com/project/system-configuration-abstractions)
 ====================
 
 # What is it?
