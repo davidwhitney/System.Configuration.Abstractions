@@ -26,5 +26,7 @@ namespace System.Configuration.Abstractions
         void GetObjectData(SerializationInfo info, StreamingContext context);
         void OnDeserialization(object sender);
         IEnumerator GetEnumerator();
+
+        NameValueCollection Raw { get; }
     }
 }

@@ -47,6 +47,16 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
+        public void Indexer_WhenSettingDoesNotExist_AndInterceptorPresentReturnsNull()
+        {
+            var wrapper = new AppSettingsExtended(_fakeConfig, new List<IConfigurationInterceptor> { new NullInterceptor() });
+
+            var val = wrapper["key-here"];
+
+            Assert.That(val, Is.Null);
+        }
+
+        [Test]
         public void Setting_WhenSettingDoesNotExistAndActionSupplied_PerformsAction()
         {
             var wrapper = new AppSettingsExtended(_fakeConfig);
@@ -164,6 +174,14 @@ namespace System.Configuration.Abstractions.Test.Unit
         public string OnSettingRetrieve(IAppSettings appSettings, string key, string originalValue)
         {
             return _returnThis;
+        }
+    }
+
+    public class NullInterceptor : IConfigurationInterceptor
+    {
+        public string OnSettingRetrieve(IAppSettings appSettings, string key, string originalValue)
+        {
+            return originalValue;
         }
     }
 }

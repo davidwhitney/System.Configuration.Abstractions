@@ -6,14 +6,14 @@ using System.Runtime.Serialization;
 
 namespace System.Configuration.Abstractions
 {
-    public class AppSettingsExtended : IAppSettings
+    public class AppSettingsExtended : NameObjectCollectionBase, IAppSettings
     {
-        private readonly NameValueCollection _appSettings;
+        public NameValueCollection Raw { get; private set; }
         private readonly List<IConfigurationInterceptor> _interceptors;
 
-        public AppSettingsExtended(NameValueCollection appSettings, List<IConfigurationInterceptor> interceptors = null)
+        public AppSettingsExtended(NameValueCollection raw, List<IConfigurationInterceptor> interceptors = null)
         {
-            _appSettings = appSettings;
+            Raw = raw;
             _interceptors = interceptors ?? new List<IConfigurationInterceptor>();
         }
 
@@ -24,7 +24,7 @@ namespace System.Configuration.Abstractions
 
         public T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
         {
-            var rawSetting = _appSettings[key];
+            var rawSetting = Raw[key];
 
             if (rawSetting == null)
             {
@@ -50,115 +50,116 @@ namespace System.Configuration.Abstractions
 
         public void Add(NameValueCollection c)
         {
-            _appSettings.Add(c);
+            Raw.Add(c);
         }
 
         public void Clear()
         {
-            _appSettings.Clear();
+            Raw.Clear();
         }
 
         public void CopyTo(Array dest, int index)
         {
-            _appSettings.CopyTo(dest, index);
+            Raw.CopyTo(dest, index);
         }
 
         public bool HasKeys()
         {
-            return _appSettings.HasKeys();
+            return Raw.HasKeys();
         }
 
         public void Add(string name, string value)
         {
-            _appSettings.Add(name, value);
+            Raw.Add(name, value);
         }
 
         public string Get(string name)
         {
-            return Intercept(name, _appSettings.Get(name));
+            return Intercept(name, Raw.Get(name));
         }
 
         public string[] GetValues(string name)
         {
-            return _appSettings.GetValues(name);
+            return Raw.GetValues(name);
         }
 
         public void Set(string name, string value)
         {
-            _appSettings.Set(name, value);
+            Raw.Set(name, value);
         }
 
         public void Remove(string name)
         {
-            _appSettings.Remove(name);
+            Raw.Remove(name);
         }
 
         public string Get(int index)
         {
-            return Intercept(index.ToString(), _appSettings.Get(index));
+            return Intercept(index.ToString(), Raw.Get(index));
         }
 
         public string[] GetValues(int index)
         {
-            return _appSettings.GetValues(index);
+            return Raw.GetValues(index);
         }
 
         public string GetKey(int index)
         {
-            return _appSettings.GetKey(index);
+            return Raw.GetKey(index);
         }
 
         public string this[string key]
         {
-            get { return Intercept(key, _appSettings[key]); }
-            set { _appSettings[key] = value; }
+            get { return Intercept(key, Raw[key]); }
+            set { Raw[key] = value; }
         }
 
         public string this[int index]
         {
-            get { return Intercept(index.ToString(), _appSettings[index]); }
+            get { return Intercept(index.ToString(), Raw[index]); }
             set { throw new NotImplementedException(""); }
         }
 
         string IAppSettings.this[string name]
         {
-            get { return Intercept(name, _appSettings[name]); }
-            set { _appSettings[name] = value; }
+            get { return Intercept(name, Raw[name]); }
+            set { Raw[name] = value; }
         }
 
         string IAppSettings.this[int index]
         {
-            get { return Intercept(index.ToString(), _appSettings[index]); }
+            get { return Intercept(index.ToString(), Raw[index]); }
         }
 
         public string[] AllKeys
         {
-            get { return _appSettings.AllKeys; }
+            get { return Raw.AllKeys; }
         }
 
-        public int Count
+        public override int Count
         {
-            get { return _appSettings.Count; }
+            get { return Raw.Count; }
         }
 
-        public NameObjectCollectionBase.KeysCollection Keys
+        public override KeysCollection Keys
         {
-            get { return _appSettings.Keys; }
+            get { return Raw.Keys; }
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            _appSettings.GetObjectData(info, context);
+            Raw.GetObjectData(info, context);
         }
 
-        public void OnDeserialization(object sender)
+        public override void OnDeserialization(object sender)
         {
-            _appSettings.OnDeserialization(sender);
+            Raw.OnDeserialization(sender);
         }
 
-        public IEnumerator GetEnumerator()
+        IEnumerator IAppSettings.GetEnumerator()
         {
-            return _appSettings.GetEnumerator();
+            return Raw.GetEnumerator();
         }
+
     }
 }

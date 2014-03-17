@@ -58,7 +58,7 @@ These strongly typed "AppSetting" helpers, will convert any primitive types that
 To wire up an `IConfigurationInterceptor`, first, implement one, then call the static method `ConfigurationManager.RegisterInterceptors(interceptor);`
 Your interceptors are singletons, so keep them free of instance variables, as they are not thread safe.
 
-Interceptors **only** fire when using the `IAppSettingsExtended` `AppSettting` and `AppSetting<T>` methods to ensure compatibility with `System.Configuration.ConfigurationManager`.
+Interceptors fire for both the AppSetting helper, and the standard NameValueCollection methods and indexers. If you want to by-pass interception, access the "Raw" property for the original collection. This is a change in behaviour in V2.
 
 ### Why would I want interceptors?
 
