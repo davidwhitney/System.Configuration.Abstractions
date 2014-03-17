@@ -4,6 +4,6 @@ namespace System.Configuration.Abstractions
 {
     public interface IConfigurationInterceptor
     {
-        string OnSettingRetrieve(NameValueCollection appSettings, string key, string originalValue);
+        string OnSettingRetrieve(IAppSettings appSettings, string key, string originalValue);
     }
 }

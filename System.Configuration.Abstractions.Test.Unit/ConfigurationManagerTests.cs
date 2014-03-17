@@ -50,7 +50,7 @@ namespace System.Configuration.Abstractions.Test.Unit
         {
             public bool Called { get; set; }
 
-            public string OnSettingRetrieve(NameValueCollection appSettings, string key, string originalValue)
+            public string OnSettingRetrieve(IAppSettings appSettings, string key, string originalValue)
             {
                 Called = true;
                 return originalValue;

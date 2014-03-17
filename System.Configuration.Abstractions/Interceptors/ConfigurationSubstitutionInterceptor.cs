@@ -4,7 +4,7 @@ namespace System.Configuration.Abstractions.Interceptors
 {
     public class ConfigurationSubstitutionInterceptor : IConfigurationInterceptor
     {
-        public string OnSettingRetrieve(NameValueCollection appSettings, string key, string originalValue)
+        public string OnSettingRetrieve(IAppSettings appSettings, string key, string originalValue)
         {
             foreach (var thisKey in appSettings.AllKeys)
             {

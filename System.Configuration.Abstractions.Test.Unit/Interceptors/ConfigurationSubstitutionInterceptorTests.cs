@@ -7,13 +7,15 @@ namespace System.Configuration.Abstractions.Test.Unit.Interceptors
     [TestFixture]
     public class ConfigurationSubstitutionInterceptorTests
     {
-        private NameValueCollection _fakeConfig;
+        private NameValueCollection _nvc;
+        private AppSettingsExtended _fakeConfig;
         private ConfigurationSubstitutionInterceptor _wrapper;
 
         [SetUp]
         public void SetUp()
         {
-            _fakeConfig = new NameValueCollection();
+            _nvc = new NameValueCollection();
+            _fakeConfig = new AppSettingsExtended(_nvc);
             _wrapper = new ConfigurationSubstitutionInterceptor();
         }
 

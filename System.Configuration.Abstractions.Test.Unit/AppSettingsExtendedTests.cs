@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using NUnit.Framework;
 
 namespace System.Configuration.Abstractions.Test.Unit
@@ -14,12 +15,6 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
-        public void Ctor_WhenPassedNullSettings_Throws()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AppSettingsExtended(null));
-        }
-
-        [Test]
         public void Indexer_WhenSettingExists_ReturnsSetting()
         {
             _fakeConfig.Add("key-here", "junk");
@@ -28,6 +23,17 @@ namespace System.Configuration.Abstractions.Test.Unit
             var val = wrapper["key-here"];
 
             Assert.That(val, Is.EqualTo("junk"));
+        }
+
+        [Test]
+        public void Indexer_WhenSettingExists_RunsAnyRegisteredInterceptorsAndReturnsSetting()
+        {
+            _fakeConfig.Add("key-here", "junk");
+            var wrapper = new AppSettingsExtended(_fakeConfig, new List<IConfigurationInterceptor>{new TestInterceptor("return this")});
+
+            var val = wrapper["key-here"];
+
+            Assert.That(val, Is.EqualTo("return this"));
         }
 
         [Test]
@@ -143,6 +149,21 @@ namespace System.Configuration.Abstractions.Test.Unit
             var ex = Assert.Throws<ConfigurationErrorsException>(() => wrapper.AppSetting<string>(key));
 
             Assert.That(ex.Message, Is.StringContaining(key));
+        }
+    }
+
+    public class TestInterceptor : IConfigurationInterceptor
+    {
+        private readonly string _returnThis;
+
+        public TestInterceptor(string returnThis)
+        {
+            _returnThis = returnThis;
+        }
+
+        public string OnSettingRetrieve(IAppSettings appSettings, string key, string originalValue)
+        {
+            return _returnThis;
         }
     }
 }
