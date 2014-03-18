@@ -17,12 +17,12 @@ namespace System.Configuration.Abstractions
             Raw = raw;
         }
 
-        ConnectionStringSettings IConnectionStrings.this[string name]
+        public ConnectionStringSettings this[string name]
         {
             get { return Intercept(Raw[name]); }
         }
 
-        ConnectionStringSettings IConnectionStrings.this[int index]
+        public ConnectionStringSettings this[int index]
         {
             get { return Intercept(Raw[index]); }
         }
