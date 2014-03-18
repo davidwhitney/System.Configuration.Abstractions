@@ -90,8 +90,10 @@ namespace System.Configuration.Abstractions
         {
             return System.Configuration.ConfigurationManager.OpenMappedMachineConfiguration(fileMap);
         }
-
-        [Obsolete("Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper")]
+        
+        /// <summary>
+        /// Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper in new code
+        /// </summary>
         public static IConfigurationManager Instance
         {
             get { return new ConfigurationManager(); }
