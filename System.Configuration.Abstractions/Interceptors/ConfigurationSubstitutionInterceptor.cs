@@ -1,6 +1,4 @@
-﻿using System.Collections.Specialized;
-
-namespace System.Configuration.Abstractions.Interceptors
+﻿namespace System.Configuration.Abstractions.Interceptors
 {
     public class ConfigurationSubstitutionInterceptor : IConfigurationInterceptor
     {

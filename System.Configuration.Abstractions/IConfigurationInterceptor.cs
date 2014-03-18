@@ -1,8 +1,6 @@
-﻿using System.Collections.Specialized;
-
-namespace System.Configuration.Abstractions
+﻿namespace System.Configuration.Abstractions
 {
-    public interface IConfigurationInterceptor
+    public interface IConfigurationInterceptor : IInterceptor
     {
         string OnSettingRetrieve(IAppSettings appSettings, string key, string originalValue);
     }

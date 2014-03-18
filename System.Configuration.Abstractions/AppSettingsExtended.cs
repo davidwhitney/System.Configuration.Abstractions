@@ -9,9 +9,9 @@ namespace System.Configuration.Abstractions
     public class AppSettingsExtended : NameObjectCollectionBase, IAppSettings
     {
         public NameValueCollection Raw { get; private set; }
-        private readonly List<IConfigurationInterceptor> _interceptors;
+        private readonly IEnumerable<IConfigurationInterceptor> _interceptors;
 
-        public AppSettingsExtended(NameValueCollection raw, List<IConfigurationInterceptor> interceptors = null)
+        public AppSettingsExtended(NameValueCollection raw, IEnumerable<IConfigurationInterceptor> interceptors = null)
         {
             Raw = raw;
             _interceptors = interceptors ?? new List<IConfigurationInterceptor>();

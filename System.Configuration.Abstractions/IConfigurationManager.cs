@@ -3,7 +3,7 @@
     public interface IConfigurationManager : IConfigurationManagerExtended
     {
         IAppSettings AppSettings { get; set; }
-        ConnectionStringSettingsCollection ConnectionStrings { get; set; }
+        IConnectionStrings ConnectionStrings { get; set; }
         object GetSection(string sectionName);
         void RefreshSection(string sectionName);
         Configuration OpenExeConfiguration(string exePath);

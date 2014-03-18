@@ -1,20 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace System.Configuration.Abstractions
 {
     public class ConfigurationManager : IConfigurationManager
     {
         public IAppSettings AppSettings { get; set; }
-        public ConnectionStringSettingsCollection ConnectionStrings { get; set; }
-        public static List<IConfigurationInterceptor> Interceptors { get; private set; }
-        
-        static ConfigurationManager()
+        public IConnectionStrings ConnectionStrings { get; set; }
+
+        public static List<IInterceptor> Interceptors { get; private set; }
+        public static IEnumerable<IConfigurationInterceptor> ConfigurationInterceptors
         {
-            Interceptors = new List<IConfigurationInterceptor>();
+            get { return Interceptors.Where(x => x is IConfigurationInterceptor).Cast<IConfigurationInterceptor>(); }
+        }
+        public static IEnumerable<IConnectionStringInterceptor> ConnectionStringInterceptors
+        {
+            get { return Interceptors.Where(x => x is IConnectionStringInterceptor).Cast<IConnectionStringInterceptor>(); }
         }
 
-        public static void RegisterInterceptors(params IConfigurationInterceptor[] interceptors)
+        static ConfigurationManager()
+        {
+            Interceptors = new List<IInterceptor>();
+        }
+
+        public static void RegisterInterceptors(params IInterceptor[] interceptors)
         {
             Interceptors.AddRange(interceptors);
         }
@@ -32,8 +42,8 @@ namespace System.Configuration.Abstractions
 
         public ConfigurationManager(NameValueCollection appSettings, ConnectionStringSettingsCollection connectionStringSettings)
         {
-            AppSettings = new AppSettingsExtended(appSettings, Interceptors);
-            ConnectionStrings = connectionStringSettings;
+            AppSettings = new AppSettingsExtended(appSettings, ConfigurationInterceptors);
+            ConnectionStrings = new ConnectionStringsExtended(connectionStringSettings, AppSettings, ConnectionStringInterceptors);
         }
 
         public object GetSection(string sectionName)

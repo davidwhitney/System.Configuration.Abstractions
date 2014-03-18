@@ -42,11 +42,15 @@
   <ItemGroup>
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="AppSettingsExtended.cs" />
+    <Compile Include="ConnectionStringsExtended.cs" />
     <Compile Include="IAppSettings.cs" />
     <Compile Include="IAppSettingsExtended.cs" />
+    <Compile Include="IConnectionStringInterceptor.cs" />
+    <Compile Include="IConnectionStrings.cs" />
     <Compile Include="IConfigurationInterceptor.cs" />
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="IConfigurationManagerExtended.cs" />
+    <Compile Include="IInterceptor.cs" />
     <Compile Include="Interceptors\ConfigurationSubstitutionInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
