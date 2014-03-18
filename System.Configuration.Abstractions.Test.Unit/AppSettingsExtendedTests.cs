@@ -197,6 +197,56 @@ namespace System.Configuration.Abstractions.Test.Unit
 
             Assert.That(ex.Message, Is.StringContaining(key));
         }
+
+        [Test]
+        public void Count_UnderlyingCollectionHasAnItem_ReturnsCountOfUnderlyingConfigCollection()
+        {
+            _wrapper = new AppSettingsExtended(new NameValueCollection{{"test", "value"}});
+
+            Assert.That(_wrapper.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Keys_UnderlyingCollectionHasAnItem_ReturnsKeysOfUnderlyingConfigCollection()
+        {
+            _wrapper = new AppSettingsExtended(new NameValueCollection{{"test", "value"}});
+
+            Assert.That(_wrapper.Keys[0], Is.EqualTo("test"));
+        }
+
+        [Test]
+        public void GetKey_WithConfigValue_ReturnsKeyFromUnderlyingCollection()
+        {
+            var key = _wrapper.GetKey(0);
+
+            Assert.That(key, Is.EqualTo("key-here"));
+        }
+
+        [Test]
+        public void Remove_WithConfigValue_RemovesUnderlyingItem()
+        {
+            _wrapper.Remove("key-here");
+
+            Assert.That(_underlyingConfiguration, Is.Empty);
+        }
+
+        [Test]
+        public void Set_WithConfigValue_SetsUnderlyingItem()
+        {
+            _wrapper.Set("key-here", "my value now");
+
+            Assert.That(_underlyingConfiguration[0], Is.EqualTo("my value now"));
+        }
+
+        [Test]
+        public void Clear_ClearsUnderlyingStore()
+        {
+            _underlyingConfiguration.Add("ah", "ha");
+
+            _wrapper.Clear();
+
+            Assert.That(_underlyingConfiguration, Is.Empty);
+        }
     }
 
     public class TestInterceptor : IConfigurationInterceptor
