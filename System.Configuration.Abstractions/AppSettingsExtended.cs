@@ -33,7 +33,8 @@ namespace System.Configuration.Abstractions
                     return whenKeyNotFoundInsteadOfThrowingDefaultException();
                 }
 
-                throw new ConfigurationErrorsException("Calling code requested setting named " + key + " but it was not in the config file.");
+                throw new ConfigurationErrorsException("Calling code requested setting named " + key +
+                                                       " but it was not in the config file.");
             }
 
             rawSetting = Intercept(key, rawSetting);
@@ -103,7 +104,7 @@ namespace System.Configuration.Abstractions
 
         public string[] GetValues(int index)
         {
-            var values =  Raw.GetValues(index);
+            var values = Raw.GetValues(index);
             return values == null
                 ? null
                 : values.Select(value => Intercept(index.ToString(), value)).ToArray();
