@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionStringsExtendedTests.cs" />
     <Compile Include="AppSettingsExtendedTests.cs" />
     <Compile Include="ConfigurationManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
