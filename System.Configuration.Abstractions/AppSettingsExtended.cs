@@ -80,7 +80,10 @@ namespace System.Configuration.Abstractions
 
         public string[] GetValues(string name)
         {
-            return Raw.GetValues(name);
+            var values = Raw.GetValues(name);
+            return values == null
+                ? null
+                : values.Select(value => Intercept(name, value)).ToArray();
         }
 
         public void Set(string name, string value)
@@ -100,7 +103,10 @@ namespace System.Configuration.Abstractions
 
         public string[] GetValues(int index)
         {
-            return Raw.GetValues(index);
+            var values =  Raw.GetValues(index);
+            return values == null
+                ? null
+                : values.Select(value => Intercept(index.ToString(), value)).ToArray();
         }
 
         public string GetKey(int index)
@@ -160,6 +166,5 @@ namespace System.Configuration.Abstractions
         {
             return Raw.GetEnumerator();
         }
-
     }
 }
