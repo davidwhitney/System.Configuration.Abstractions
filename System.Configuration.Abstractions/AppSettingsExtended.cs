@@ -123,18 +123,6 @@ namespace System.Configuration.Abstractions
         public string this[int index]
         {
             get { return Intercept(index.ToString(), Raw[index]); }
-            set { throw new NotImplementedException(""); }
-        }
-
-        string IAppSettings.this[string name]
-        {
-            get { return Intercept(name, Raw[name]); }
-            set { Raw[name] = value; }
-        }
-
-        string IAppSettings.this[int index]
-        {
-            get { return Intercept(index.ToString(), Raw[index]); }
         }
 
         public string[] AllKeys

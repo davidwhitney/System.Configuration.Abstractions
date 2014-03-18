@@ -25,11 +25,64 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
+        public void IndexerById_WhenSettingExists_ReturnsSetting()
+        {
+            var val = _wrapper[0];
+
+            Assert.That(val, Is.EqualTo("junk"));
+        }
+
+        [Test]
+        public void Get_WhenSettingExists_ReturnsSetting()
+        {
+            var val = _wrapper.Get("key-here");
+
+            Assert.That(val, Is.EqualTo("junk"));
+        }
+
+        [Test]
+        public void GetById_WhenSettingExists_ReturnsSetting()
+        {
+            var val = _wrapper.Get(0);
+
+            Assert.That(val, Is.EqualTo("junk"));
+        }
+
+        [Test]
         public void Indexer_WhenSettingExists_RunsAnyRegisteredInterceptorsAndReturnsSetting()
         {
-            var wrapper = new AppSettingsExtended(_underlyingConfiguration, new List<IConfigurationInterceptor>{new TestInterceptor("return this")});
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, new List<IConfigurationInterceptor>{new TestInterceptor("return this")});
 
-            var val = wrapper["key-here"];
+            var val = _wrapper["key-here"];
+
+            Assert.That(val, Is.EqualTo("return this"));
+        }
+
+        [Test]
+        public void IndexerById_WhenSettingExists_RunsAnyRegisteredInterceptorsAndReturnsSetting()
+        {
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, new List<IConfigurationInterceptor>{new TestInterceptor("return this")});
+
+            var val = _wrapper[0];
+
+            Assert.That(val, Is.EqualTo("return this"));
+        }
+
+        [Test]
+        public void Get_WhenSettingExistsAndInterceptorPresent_ReturnsSetting()
+        {
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, new List<IConfigurationInterceptor> { new TestInterceptor("return this") });
+            var val = _wrapper.Get("key-here");
+
+            Assert.That(val, Is.EqualTo("return this"));
+        }
+
+        [Test]
+        public void GetById_WhenSettingExistsAndInterceptorPresent_ReturnsSetting()
+        {
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, new List<IConfigurationInterceptor> { new TestInterceptor("return this") });
+            
+            var val = _wrapper.Get(0);
 
             Assert.That(val, Is.EqualTo("return this"));
         }
@@ -48,9 +101,9 @@ namespace System.Configuration.Abstractions.Test.Unit
         public void Indexer_WhenSettingDoesNotExist_AndInterceptorPresentReturnsNull()
         {
             _underlyingConfiguration.Clear();
-            var wrapper = new AppSettingsExtended(_underlyingConfiguration, new List<IConfigurationInterceptor> { new NullInterceptor() });
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, new List<IConfigurationInterceptor> { new NullInterceptor() });
 
-            var val = wrapper["key-here"];
+            var val = _wrapper["key-here"];
 
             Assert.That(val, Is.Null);
         }
