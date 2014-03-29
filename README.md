@@ -1,4 +1,4 @@
-System.Configuration.Abstractions [![Build status](https://ci.appveyor.com/api/projects/status/e4fordvbcynvawej)](https://ci.appveyor.com/project/DavidWhitney/reallysimplefeaturetoggle)
+System.Configuration.Abstractions [![Build status](https://ci.appveyor.com/api/projects/status/ngl0cknxt74bfnve)](https://ci.appveyor.com/project/DavidWhitney/system-configuration-abstractions)
 ====================
 
 # What is it?
