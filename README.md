@@ -54,9 +54,10 @@ These strongly typed "AppSetting" helpers, will convert any primitive types that
 ## IConfigurationInterceptors
 
 `IConfigurationInterceptor`'s are hooks that, if registered, allow you to intercept and manipulate the values retrieved from configuration.
+`IConnectionStringInterceptor`'s are hooks that allow you to manipulate connection strings during retrieval in a similar manner.
 
-To wire up an `IConfigurationInterceptor`, first, implement one, then call the static method `ConfigurationManager.RegisterInterceptors(interceptor);`
-Your interceptors are singletons, so keep them free of instance variables, as they are not thread safe.
+To wire up an `IConfigurationInterceptor` or `IConnectionStringInterceptor`, first, implement one, then call the static method `ConfigurationManager.RegisterInterceptors(interceptor);`
+Your interceptors are singletons and should be thread safe as the same instance could be called across multiple threads concurrently.
 
 Interceptors fire for both the AppSetting helper, and the standard NameValueCollection methods and indexers. If you want to by-pass interception, access the "Raw" property for the original collection. This is a change in behaviour in V2.
 
