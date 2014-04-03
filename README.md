@@ -46,6 +46,33 @@ If you want to directly switch out calls to `System.Configuration.ConfigurationM
 
 Lastly, you can just new up an instance of `System.Configuration.Abstractions.ConfigurationManager` anywhere, using its default constructor, and everything'll be just fine.
 
+Examples:
+
+```csharp
+    // Usages
+
+    // You can use the singleton
+    var valString = ConfigurationManager.Instance.AppSettings["stringKey"];
+    var valInt = ConfigurationManager.Instance.AppSettings.AppSetting<int>("intKey");
+
+    // You can new up an instance
+    var configMgr = new ConfigurationManager();
+    var valString2 = configMgr.AppSettings["stringKey"];
+    var valInt2 = configMgr.AppSettings.AppSetting<int>("intKey");
+
+    // You can new up an instance with configuration values
+    var configMgr3 = new ConfigurationManager(new NameValueCollection {{"stringKey", "hello"}, {"intKey", "123"}});
+    var valString3 = configMgr3.AppSettings["stringKey"];
+    var valInt3 = configMgr3.AppSettings.AppSetting<int>("intKey");
+    
+    // You can just switch out calls in place for backwards compatible behaviour
+    var old = System.Configuration.ConfigurationManager.AppSettings["stringKey"];
+    var @new = ConfigurationManager.Instance.AppSettings["stringKey"];
+
+    // You can wire up to your container
+    ninjectContainer.Bind<IConfigurationManager>().ToMethod(()=> return new ConfigurationManager());
+```
+
 # Features
 
 ## Generic typed helper methods for retrieving typed config values
@@ -98,7 +125,15 @@ The following usage examples illustrate how to use these helpers:
 To wire up an `IConfigurationInterceptor` or `IConnectionStringInterceptor`, first, implement one, then call the static method `ConfigurationManager.RegisterInterceptors(interceptor);`
 Your interceptors are singletons and should be thread safe as the same instance could be called across multiple threads concurrently.
 
-Interceptors fire for both the AppSetting helper, and the standard NameValueCollection methods and indexers. If you want to by-pass interception, access the "Raw" property for the original collection. This is a change in behaviour in V2.
+Example:
+
+```csharp
+	ConfigurationManager.RegisterInterceptors(new ConfigurationSubstitutionInterceptor());
+	var result = ConfigurationManager.Instance.AppSettings.AppSetting<string>("key"); // Interceptor executes
+	var result2 = ConfigurationManager.Instance.AppSettings["key"]; // Interceptor executes
+```
+
+Interceptors fire for both the AppSetting helper, and the standard NameValueCollection methods and indexers. If you want to by-pass interception, access the "Raw" property for the original collection. *This is a change in behaviour in V2*.
 
 ### Why would I want interceptors?
 
