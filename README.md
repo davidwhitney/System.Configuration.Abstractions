@@ -2,7 +2,6 @@ System.Configuration.Abstractions [![Build status](https://ci.appveyor.com/api/p
 ====================
 
 * Introduction
-* Benefits
 * Installation
 * Getting started
 * Features
@@ -12,21 +11,22 @@ System.Configuration.Abstractions [![Build status](https://ci.appveyor.com/api/p
 * Contributing
 * Credits
 
-# Introduction
+---
+
 In most projects, you're going to have some configuration. In .NET projects, it'll probably start in your app.config or web.config file.
 
 However, if you love TDD, you'll likely have notice that all of the built in configuration classes are horribly un-testable. They all revolve around static references to System.Configuration.ConfigurationManager, and don't really have any interfaces, so in every project, you end up wrapping them into something like "IAppSettingsWrapper", in order to write tests.
 
 After writing these wrappers several thousand times, and being inspired by the excellent "System.IO.Abstractions" package, we've put together a standardised set of wrappers around these core framework classes.
 
-# Benefits
+If you want
 
-* Want to **mock/stub/whatever** out your App/Web.config files? 
-* Want to assert that the values from configuration are *really* configuring your application?
-* Want to **add custom hooks** around loading configuration values?
-* Want **stronger typing**?
+* to **mock/stub/whatever** out your App/Web.config files
+* to assert that the values from configuration are *really* configuring your application
+* to **add custom hooks** around loading configuration values
+* **stronger typing**
 
-This is for you.
+The this is for you.
 
 # Installation
 
@@ -51,16 +51,44 @@ Lastly, you can just new up an instance of `System.Configuration.Abstractions.Co
 ## Generic typed helper methods for retrieving typed config values
 
 The `IAppSettingsExtended` interface, which our `AppSettingsExtended` class implements, contains two new methods:
-```csharp
-    public interface IAppSettingsExtended
-    {
-        string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null);
-        T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null);
-    }
-```    
+
+* `string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null);`
+* `T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null);`
+
 These strongly typed "AppSetting" helpers, will convert any primitive types that `Convert.ChangeType` supports. The most obvious use case being int / bool / float / int? / bool? from their string representations - keeping alot of noisy conversions out of your code. You can also provide an optional Func<T> which will get invoked if the key you're requesting is not found - otherwise, we'll throw an exception.
 
-# Extensibility
+
+The following usage examples illustrate how to use these helpers:
+```csharp
+    // Before *******************************
+    
+    var settingThatIsAnInteger = System.Configuration.ConfigurationManager.AppSettings["key"];
+    int someInt;
+    if (Int32.TryParse(settingThatIsAnInteger, out someInt))
+    {
+        someInt = 123; // Default
+    }
+
+    var settingThatIsABool = System.Configuration.ConfigurationManager.AppSettings["otherKey"];
+    bool someBool;
+    if (bool.TryParse(settingThatIsAnInteger, out someBool))
+    {
+        someBool = true; // Default
+    }
+
+    // After ********************************
+    
+    var withADefault = ConfigurationManager.Instance.AppSettings.AppSetting("key", () => 123);
+    var withoutADefault = ConfigurationManager.Instance.AppSettings.AppSetting<int>("key");
+    
+    var worksWithAllPrimatives = ConfigurationManager.Instance.AppSettings.AppSetting<bool>("otherKey");
+    var worksWithNullables = ConfigurationManager.Instance.AppSettings.AppSetting<bool?>("otherKey");
+    
+    var customNotFoundHandler = ConfigurationManager.Instance.AppSettings.AppSetting<bool?>("otherKey", () =>
+    {
+        throw new MyCustomException();
+    });
+```    
 
 ## IConfigurationInterceptors
 
