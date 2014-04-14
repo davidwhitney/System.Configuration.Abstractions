@@ -17,7 +17,7 @@
 		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
     </frameworkAssemblies>
 	<releaseNotes>
-		Added ConfigurationManager.AppSettings.Map<TMyDtoType>() for auto-mapping of AppSettings to DTOs
+		Added ConfigurationManager.AppSettings.Map&lt;TMyDtoType&gt;() for auto-mapping of AppSettings to DTOs
 	</releaseNotes>
   </metadata>
 	<files>	  
