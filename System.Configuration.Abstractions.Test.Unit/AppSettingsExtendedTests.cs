@@ -189,6 +189,24 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
+        public void Setting_RequestACustomType_MapsAnyDiscoveredSettingsCorrectly()
+        {
+            _underlyingConfiguration.Add("stringg", "some string");
+            _underlyingConfiguration.Add("doublee", "123");
+
+            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+
+            Assert.That(settingsDto.stringg, Is.EqualTo("some string"));
+            Assert.That(settingsDto.doublee, Is.EqualTo(123m));
+        }
+
+        private class AppSettingsToType
+        {
+            public string stringg { get; set; }
+            public double doublee { get; set; }
+        }
+
+        [Test]
         public void Setting_WhenValueDoesntExistInConfiguration_ThrowsExceptionWithMissingKeyInMessage()
         {
             const string key = "doesnt-exist";

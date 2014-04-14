@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace System.Configuration.Abstractions
@@ -15,6 +16,25 @@ namespace System.Configuration.Abstractions
         {
             Raw = raw;
             _interceptors = interceptors ?? new List<IConfigurationInterceptor>();
+        }
+
+        public TSettingsDto MapSettings<TSettingsDto>() where TSettingsDto : class, new()
+        {
+            var instance = new TSettingsDto();
+            var dtoType = typeof(TSettingsDto);
+
+            foreach (var propertyInfo in dtoType.GetProperties())
+            {
+                if (Raw.AllKeys.Contains(propertyInfo.Name))
+                {
+                    var value = AppSetting(propertyInfo.Name);
+                    var typed = Convert.ChangeType(value, propertyInfo.PropertyType);
+
+                    propertyInfo.SetValue(instance, typed);
+                }
+            }
+
+            return instance;
         }
 
         public string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
