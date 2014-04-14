@@ -17,7 +17,7 @@ namespace System.Configuration.Abstractions
             _interceptors = interceptors ?? new List<IConfigurationInterceptor>();
         }
 
-        public TSettingsDto MapSettings<TSettingsDto>() where TSettingsDto : class, new()
+        public TSettingsDto Map<TSettingsDto>() where TSettingsDto : class, new()
         {
             var instance = new TSettingsDto();
             RecursivelyMapProperties(typeof(TSettingsDto), instance);

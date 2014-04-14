@@ -189,44 +189,44 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
-        public void MapSettings_WithMultipleTypes_Maps()
+        public void Map_WithMultipleTypes_Maps()
         {
             _underlyingConfiguration.Add("stringg", "some string");
             _underlyingConfiguration.Add("doublee", "123");
 
-            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+            var settingsDto = _wrapper.Map<AppSettingsToType>();
 
             Assert.That(settingsDto.stringg, Is.EqualTo("some string"));
             Assert.That(settingsDto.doublee, Is.EqualTo(123m));
         }
 
         [Test]
-        public void MapSettings_WithPropertyThatShouldBeMappedTwice_Maps()
+        public void Map_WithPropertyThatShouldBeMappedTwice_Maps()
         {
             _underlyingConfiguration.Add("stringg", "some string");
 
-            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+            var settingsDto = _wrapper.Map<AppSettingsToType>();
 
             Assert.That(settingsDto.Stringg, Is.EqualTo("some string"));
             Assert.That(settingsDto.stringg, Is.EqualTo("some string"));
         }
 
         [Test]
-        public void MapSettings_WithDotNotationValues_Maps()
+        public void Map_WithDotNotationValues_Maps()
         {
             _underlyingConfiguration.Add("SubDto.PropertyName", "some string");
 
-            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+            var settingsDto = _wrapper.Map<AppSettingsToType>();
 
             Assert.That(settingsDto.SubDto.PropertyName, Is.EqualTo("some string"));
         }
 
         [Test]
-        public void MapSettings_WithDotNotationValuesNestedDeeply_Maps()
+        public void Map_WithDotNotationValuesNestedDeeply_Maps()
         {
             _underlyingConfiguration.Add("SubDto.Deeper.PropertyName", "some string");
 
-            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+            var settingsDto = _wrapper.Map<AppSettingsToType>();
 
             Assert.That(settingsDto.SubDto.Deeper.PropertyName, Is.EqualTo("some string"));
         }
@@ -236,11 +236,11 @@ namespace System.Configuration.Abstractions.Test.Unit
         private class AppSettingsToTypeInner2 { public string PropertyName { get; set; } }
 
         [Test]
-        public void MapSettings_WhenNestedTypeHasNoAppropriateCtor_WillNotMapNestedType()
+        public void Map_WhenNestedTypeHasNoAppropriateCtor_WillNotMapNestedType()
         {
             _underlyingConfiguration.Add("Inner.Nested", "some string");
 
-            var settingsDto = _wrapper.MapSettings<ClassWithInnerTypeThatCantBeActivated>();
+            var settingsDto = _wrapper.Map<ClassWithInnerTypeThatCantBeActivated>();
 
             Assert.That(settingsDto.Inner, Is.Null);
         }
