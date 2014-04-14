@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace System.Configuration.Abstractions
@@ -25,7 +24,8 @@ namespace System.Configuration.Abstractions
 
             foreach (var propertyInfo in dtoType.GetProperties())
             {
-                if (Raw.AllKeys.Contains(propertyInfo.Name))
+                var nameToMatch = propertyInfo.Name.ToLower();
+                if (Raw.AllKeys.Contains(nameToMatch))
                 {
                     var value = AppSetting(propertyInfo.Name);
                     var typed = Convert.ChangeType(value, propertyInfo.PropertyType);

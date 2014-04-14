@@ -189,7 +189,7 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
-        public void Setting_RequestACustomType_MapsAnyDiscoveredSettingsCorrectly()
+        public void MapSettings_WithMultipleTypes_Maps()
         {
             _underlyingConfiguration.Add("stringg", "some string");
             _underlyingConfiguration.Add("doublee", "123");
@@ -200,10 +200,39 @@ namespace System.Configuration.Abstractions.Test.Unit
             Assert.That(settingsDto.doublee, Is.EqualTo(123m));
         }
 
+        [Test]
+        public void MapSettings_WithPropertyThatShouldBeMappedTwice_Maps()
+        {
+            _underlyingConfiguration.Add("stringg", "some string");
+
+            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+
+            Assert.That(settingsDto.Stringg, Is.EqualTo("some string"));
+            Assert.That(settingsDto.stringg, Is.EqualTo("some string"));
+        }
+
+        /*[Test]
+        public void MapSettings_WithDotNotationValues_Maps()
+        {
+            _underlyingConfiguration.Add("SubDto.PropertyName", "some string");
+
+            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+
+            Assert.That(settingsDto.SubDto.PropertyName, Is.EqualTo("some string"));
+        }*/
+
         private class AppSettingsToType
         {
+            public string Stringg { get; set; }
             public string stringg { get; set; }
             public double doublee { get; set; }
+
+            public AppSettingsToTypeInner SubDto { get; set; }
+        }
+
+        private class AppSettingsToTypeInner
+        {
+            public string PropertyName { get; set; }
         }
 
         [Test]
