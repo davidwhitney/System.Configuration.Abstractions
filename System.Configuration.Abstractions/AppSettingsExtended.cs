@@ -20,23 +20,10 @@ namespace System.Configuration.Abstractions
         public TSettingsDto MapSettings<TSettingsDto>() where TSettingsDto : class, new()
         {
             var instance = new TSettingsDto();
-            var dtoType = typeof(TSettingsDto);
-
-            foreach (var propertyInfo in dtoType.GetProperties())
-            {
-                var nameToMatch = propertyInfo.Name.ToLower();
-                if (Raw.AllKeys.Contains(nameToMatch))
-                {
-                    var value = AppSetting(propertyInfo.Name);
-                    var typed = Convert.ChangeType(value, propertyInfo.PropertyType);
-
-                    propertyInfo.SetValue(instance, typed);
-                }
-            }
-
+            RecursivelyMapProperties(typeof(TSettingsDto), instance);
             return instance;
         }
-
+        
         public string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
         {
             return AppSetting<string>(key, whenKeyNotFoundInsteadOfThrowingDefaultException);
@@ -174,6 +161,30 @@ namespace System.Configuration.Abstractions
         IEnumerator IAppSettings.GetEnumerator()
         {
             return Raw.GetEnumerator();
+        }
+
+        private void RecursivelyMapProperties<TSettingsDto>(Type dtoType, TSettingsDto instance, string prefix = "")
+            where TSettingsDto : class, new()
+        {
+            foreach (var propertyInfo in dtoType.GetProperties())
+            {
+                var lookupName = string.Join(".", prefix, propertyInfo.Name.ToLower()).TrimStart(new[] { '.' });
+                var matchedKey = Raw.AllKeys.Where(x => x.ToLower() == lookupName).ToList();
+                if (matchedKey.Any())
+                {
+                    var value = AppSetting(matchedKey.First());
+                    var typed = Convert.ChangeType(value, propertyInfo.PropertyType);
+                    propertyInfo.SetValue(instance, typed);
+                }
+
+                if (!propertyInfo.PropertyType.IsPrimitive 
+                    && propertyInfo.PropertyType.GetConstructor(Type.EmptyTypes) != null)
+                {
+                    var subType = Activator.CreateInstance(propertyInfo.PropertyType);
+                    propertyInfo.SetValue(instance, subType);
+                    RecursivelyMapProperties(propertyInfo.PropertyType, subType, lookupName);
+                }
+            }
         }
     }
 }

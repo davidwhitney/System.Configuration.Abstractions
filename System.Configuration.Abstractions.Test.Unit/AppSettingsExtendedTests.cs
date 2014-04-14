@@ -211,7 +211,7 @@ namespace System.Configuration.Abstractions.Test.Unit
             Assert.That(settingsDto.stringg, Is.EqualTo("some string"));
         }
 
-        /*[Test]
+        [Test]
         public void MapSettings_WithDotNotationValues_Maps()
         {
             _underlyingConfiguration.Add("SubDto.PropertyName", "some string");
@@ -219,21 +219,21 @@ namespace System.Configuration.Abstractions.Test.Unit
             var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
 
             Assert.That(settingsDto.SubDto.PropertyName, Is.EqualTo("some string"));
-        }*/
-
-        private class AppSettingsToType
-        {
-            public string Stringg { get; set; }
-            public string stringg { get; set; }
-            public double doublee { get; set; }
-
-            public AppSettingsToTypeInner SubDto { get; set; }
         }
 
-        private class AppSettingsToTypeInner
+        [Test]
+        public void MapSettings_WithDotNotationValuesNestedDeeply_Maps()
         {
-            public string PropertyName { get; set; }
+            _underlyingConfiguration.Add("SubDto.Deeper.PropertyName", "some string");
+
+            var settingsDto = _wrapper.MapSettings<AppSettingsToType>();
+
+            Assert.That(settingsDto.SubDto.Deeper.PropertyName, Is.EqualTo("some string"));
         }
+
+        private class AppSettingsToType { public string Stringg { get; set; } public string stringg { get; set; } public double doublee { get; set; } public AppSettingsToTypeInner SubDto { get; set; } }
+        private class AppSettingsToTypeInner { public string PropertyName { get; set; } public AppSettingsToTypeInner2 Deeper { get; set; } }
+        private class AppSettingsToTypeInner2 { public string PropertyName { get; set; } }
 
         [Test]
         public void Setting_WhenValueDoesntExistInConfiguration_ThrowsExceptionWithMissingKeyInMessage()
