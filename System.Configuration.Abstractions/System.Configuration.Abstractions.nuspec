@@ -16,6 +16,9 @@
 	<frameworkAssemblies>
 		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
     </frameworkAssemblies>
+	<releaseNotes>
+		Added ConfigurationManager.AppSettings.Map<TMyDtoType>() for auto-mapping of AppSettings to DTOs
+	</releaseNotes>
   </metadata>
 	<files>	  
 	  <file src="bin\Release\*.pdb" target="lib\net45" /> 
