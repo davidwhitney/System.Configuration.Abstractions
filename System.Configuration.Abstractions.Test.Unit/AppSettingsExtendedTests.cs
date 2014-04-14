@@ -236,6 +236,19 @@ namespace System.Configuration.Abstractions.Test.Unit
         private class AppSettingsToTypeInner2 { public string PropertyName { get; set; } }
 
         [Test]
+        public void MapSettings_WhenNestedTypeHasNoAppropriateCtor_WillNotMapNestedType()
+        {
+            _underlyingConfiguration.Add("Inner.Nested", "some string");
+
+            var settingsDto = _wrapper.MapSettings<ClassWithInnerTypeThatCantBeActivated>();
+
+            Assert.That(settingsDto.Inner, Is.Null);
+        }
+
+        private class ClassWithInnerTypeThatCantBeActivated { public InnerTypeThatCantBeActivated Inner { get; set; } }
+        private class InnerTypeThatCantBeActivated { private InnerTypeThatCantBeActivated() { } public string Nested { get; set; } }
+
+        [Test]
         public void Setting_WhenValueDoesntExistInConfiguration_ThrowsExceptionWithMissingKeyInMessage()
         {
             const string key = "doesnt-exist";
