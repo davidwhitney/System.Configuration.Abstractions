@@ -10,7 +10,6 @@
         Configuration OpenExeConfiguration(ConfigurationUserLevel userLevel);
         Configuration OpenMachineConfiguration();
         Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap, ConfigurationUserLevel userLevel);
-        Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap, ConfigurationUserLevel userLevel, bool preLoad);
         Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap);
     }
 }
