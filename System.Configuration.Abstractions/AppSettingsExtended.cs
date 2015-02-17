@@ -174,14 +174,14 @@ namespace System.Configuration.Abstractions
                 {
                     var value = AppSetting(matchedKey.First());
                     var typed = Convert.ChangeType(value, propertyInfo.PropertyType);
-                    propertyInfo.SetValue(instance, typed);
+                    propertyInfo.SetValue(instance, typed, null);
                 }
 
                 if (!propertyInfo.PropertyType.IsPrimitive 
                     && propertyInfo.PropertyType.GetConstructor(Type.EmptyTypes) != null)
                 {
                     var subType = Activator.CreateInstance(propertyInfo.PropertyType);
-                    propertyInfo.SetValue(instance, subType);
+                    propertyInfo.SetValue(instance, subType, null);
                     RecursivelyMapProperties(propertyInfo.PropertyType, subType, lookupName);
                 }
             }
