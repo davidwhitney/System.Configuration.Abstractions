@@ -80,12 +80,14 @@ namespace System.Configuration.Abstractions
         {
             return System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, userLevel);
         }
-
+        
+        #if NET4
         public Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap, ConfigurationUserLevel userLevel, bool preLoad)
         {
             return System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, userLevel, preLoad);
         }
-
+        #endif
+        
         public Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap)
         {
             return System.Configuration.ConfigurationManager.OpenMappedMachineConfiguration(fileMap);

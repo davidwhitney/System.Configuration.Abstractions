@@ -10,7 +10,9 @@
         Configuration OpenExeConfiguration(ConfigurationUserLevel userLevel);
         Configuration OpenMachineConfiguration();
         Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap, ConfigurationUserLevel userLevel);
+        #if NET4
         Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap, ConfigurationUserLevel userLevel, bool preLoad);
+        #endif
         Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap);
     }
 }
