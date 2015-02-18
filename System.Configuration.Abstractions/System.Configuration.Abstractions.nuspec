@@ -21,6 +21,8 @@
 	</releaseNotes>
   </metadata>
 	<files>	  
+	  <file src="..\System.Configuration.Abstractions.Net40\bin\Release\*.dll" target="lib\net40" /> 
+	  <file src="..\System.Configuration.Abstractions.Net40\bin\Release\*.pdb" target="lib\net40" /> 
 	  <file src="bin\Release\*.pdb" target="lib\net45" /> 
 	</files> 
 </package>
