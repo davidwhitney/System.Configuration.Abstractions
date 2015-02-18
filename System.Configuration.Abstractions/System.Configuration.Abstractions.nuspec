@@ -10,15 +10,13 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Interfaced wrappers around System Configuration ConfigurationManager with support for extensibility points and strongly typed helpers.</summary>
     <description>$description$</description>
-    <copyright>Copyright 2013</copyright>
+    <copyright>Copyright 2015</copyright>
     <tags>ConfigurationManager Abstraction System.Configuration</tags>
 	<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
 	<frameworkAssemblies>
 		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
     </frameworkAssemblies>
-	<releaseNotes>
-		Added ConfigurationManager.AppSettings.Map&lt;TMyDtoType&gt;() for auto-mapping of AppSettings to DTOs
-	</releaseNotes>
+	<releaseNotes>Added support for .NET40 - one of the .NET45 only interfaces is unavailable in the .NET40 port.</releaseNotes>
   </metadata>
 	<files>	  
 	  <file src="..\System.Configuration.Abstractions.Net40\bin\Release\*.dll" target="lib\net40" /> 
