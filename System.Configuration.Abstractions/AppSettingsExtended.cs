@@ -40,8 +40,8 @@ namespace System.Configuration.Abstractions
                     return whenKeyNotFoundInsteadOfThrowingDefaultException();
                 }
 
-                throw new ConfigurationErrorsException("Calling code requested setting named " + key +
-                                                       " but it was not in the config file.");
+                throw new ConfigurationErrorsException("Calling code requested setting named '" + key +
+                                                       "' but it was not in the config file.");
             }
 
             rawSetting = Intercept(key, rawSetting);
