@@ -26,22 +26,12 @@ namespace System.Configuration.Abstractions
 
         public T AppSettingSilent<T>(string key, Func<T> insteadOfThrowingDefaultException = null)
         {
-            T appSetting;
-            try
-            {
-                appSetting = AppSetting(key, insteadOfThrowingDefaultException);
-            }
-            catch
-            {
-                if (insteadOfThrowingDefaultException != null)
-                {
-                    return insteadOfThrowingDefaultException();
-                }
+            return AppSetting(key, insteadOfThrowingDefaultException, insteadOfThrowingDefaultException);
+        }
 
-                throw;
-            }
-
-            return appSetting;
+        public T AppSettingConvert<T>(string key, Func<T> whenConversionFailsInsteadOfThrowingDefaultException = null)
+        {
+            return AppSetting(key, null, whenConversionFailsInsteadOfThrowingDefaultException);
         }
 
         public string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
@@ -49,7 +39,7 @@ namespace System.Configuration.Abstractions
             return AppSetting<string>(key, whenKeyNotFoundInsteadOfThrowingDefaultException);
         }
 
-        public T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
+        public T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null, Func<T> whenConversionFailsInsteadOfThrowingDefaultException = null)
         {
             var rawSetting = Raw[key];
 
@@ -61,12 +51,24 @@ namespace System.Configuration.Abstractions
                 }
 
                 throw new ConfigurationErrorsException("Calling code requested setting named '" + key +
-                                                       "' but it was not in the config file.");
+                                                        "' but it was not in the config file.");
             }
 
-            rawSetting = Intercept(key, rawSetting);
+            try 
+            {
+                rawSetting = Intercept(key, rawSetting);
 
-            return (T) Convert.ChangeType(rawSetting, typeof (T));
+                return (T) Convert.ChangeType(rawSetting, typeof (T));
+            }
+            catch
+            {
+                if (whenConversionFailsInsteadOfThrowingDefaultException != null)
+                {
+                    return whenConversionFailsInsteadOfThrowingDefaultException();
+                }
+
+                throw;
+            }
         }
 
         private string Intercept(string key, string rawSetting)
