@@ -31,7 +31,7 @@ namespace System.Configuration.Abstractions
             {
                 appSetting = AppSetting(key, insteadOfThrowingDefaultException);
             }
-            catch (Exception)
+            catch
             {
                 if (insteadOfThrowingDefaultException != null)
                 {
