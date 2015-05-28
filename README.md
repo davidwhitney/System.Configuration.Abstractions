@@ -77,10 +77,11 @@ Examples:
 
 ## Generic typed helper methods for retrieving typed config values
 
-The `IAppSettingsExtended` interface, which our `AppSettingsExtended` class implements, contains two new methods:
+The `IAppSettingsExtended` interface, which our `AppSettingsExtended` class implements, contains three new methods:
 
 * `string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null);`
 * `T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null);`
+* `T AppSettingSilent<T>(string key, Func<T> insteadOfThrowingDefaultException = null);`
 
 These strongly typed "AppSetting" helpers, will convert any primitive types that `Convert.ChangeType` supports. The most obvious use case being int / bool / float / int? / bool? from their string representations - keeping alot of noisy conversions out of your code. You can also provide an optional Func<T> which will get invoked if the key you're requesting is not found - otherwise, we'll throw an exception.
 
@@ -103,6 +104,20 @@ The following usage examples illustrate how to use these helpers:
         someBool = true; // Default
     }
 
+	bool? someBool;
+	try
+	{
+		var settingThatIsABool = System.Configuration.ConfigurationManager.AppSettings["otherKey"];
+		if (bool.TryParse(settingThatIsAnInteger, out someBool))
+		{
+			someBool = true; // Default
+		}
+	}
+	catch
+	{
+		someBool = true;
+	}
+	
     // After ********************************
     
     var withADefault = ConfigurationManager.Instance.AppSettings.AppSetting("key", () => 123);
@@ -114,6 +129,16 @@ The following usage examples illustrate how to use these helpers:
     var customNotFoundHandler = ConfigurationManager.Instance.AppSettings.AppSetting<bool?>("otherKey", () =>
     {
         throw new MyCustomException();
+    });
+	
+	var defaultValue = true;
+	var silentHandler = configurationManagerExtended.AppSettingSilent<bool>("otherKey", () =>
+    {
+		// Log Warning
+		// ...
+		
+		// Return Default
+        return defaultValue;
     });
 ```    
 

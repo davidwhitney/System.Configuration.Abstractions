@@ -116,6 +116,26 @@ namespace System.Configuration.Abstractions.Test.Unit
             Assert.That(val, Is.EqualTo("default thing"));
         }
 
+        [TestCase("NotSoTrue", true)]
+        [TestCase("NotSoTrue", false)]
+        public void SettingSilently_WhenExceptionRaisedAndActionSupplied_PerformsAction(string boolValue, bool expectationAndDefault)
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", boolValue);
+
+            var val = _wrapper.AppSettingSilent("key-that-fails-cast", () => expectationAndDefault);
+
+            Assert.That(val, Is.EqualTo(expectationAndDefault));
+        }
+        
+
+        [Test]
+        public void SettingSilently_WhenExceptionRaisedAndActionNotSupplied_PerformsAction()
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", "NotSoTrue");
+
+            Assert.Throws<FormatException>(() => _wrapper.AppSettingSilent<bool>("key-that-fails-cast"));
+        }
+
         [Test]
         public void Setting_WhenSettingDoesNotExistAndActionSuppliedReturnsATypedThing_ReturnsTypedThing()
         {

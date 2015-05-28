@@ -23,7 +23,27 @@ namespace System.Configuration.Abstractions
             RecursivelyMapProperties(typeof(TSettingsDto), instance);
             return instance;
         }
-        
+
+        public T AppSettingSilent<T>(string key, Func<T> insteadOfThrowingDefaultException = null)
+        {
+            T appSetting;
+            try
+            {
+                appSetting = AppSetting(key, insteadOfThrowingDefaultException);
+            }
+            catch (Exception)
+            {
+                if (insteadOfThrowingDefaultException != null)
+                {
+                    return insteadOfThrowingDefaultException();
+                }
+
+                throw;
+            }
+
+            return appSetting;
+        }
+
         public string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
         {
             return AppSetting<string>(key, whenKeyNotFoundInsteadOfThrowingDefaultException);
