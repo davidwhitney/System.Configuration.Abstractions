@@ -23,13 +23,23 @@ namespace System.Configuration.Abstractions
             RecursivelyMapProperties(typeof(TSettingsDto), instance);
             return instance;
         }
-        
+
+        public T AppSettingSilent<T>(string key, Func<T> insteadOfThrowingDefaultException = null)
+        {
+            return AppSetting(key, insteadOfThrowingDefaultException, insteadOfThrowingDefaultException);
+        }
+
+        public T AppSettingConvert<T>(string key, Func<T> whenConversionFailsInsteadOfThrowingDefaultException = null)
+        {
+            return AppSetting(key, null, whenConversionFailsInsteadOfThrowingDefaultException);
+        }
+
         public string AppSetting(string key, Func<string> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
         {
             return AppSetting<string>(key, whenKeyNotFoundInsteadOfThrowingDefaultException);
         }
 
-        public T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null)
+        public T AppSetting<T>(string key, Func<T> whenKeyNotFoundInsteadOfThrowingDefaultException = null, Func<T> whenConversionFailsInsteadOfThrowingDefaultException = null)
         {
             var rawSetting = Raw[key];
 
@@ -41,12 +51,24 @@ namespace System.Configuration.Abstractions
                 }
 
                 throw new ConfigurationErrorsException("Calling code requested setting named '" + key +
-                                                       "' but it was not in the config file.");
+                                                        "' but it was not in the config file.");
             }
 
-            rawSetting = Intercept(key, rawSetting);
+            try 
+            {
+                rawSetting = Intercept(key, rawSetting);
 
-            return (T) Convert.ChangeType(rawSetting, typeof (T));
+                return (T) Convert.ChangeType(rawSetting, typeof (T));
+            }
+            catch
+            {
+                if (whenConversionFailsInsteadOfThrowingDefaultException != null)
+                {
+                    return whenConversionFailsInsteadOfThrowingDefaultException();
+                }
+
+                throw;
+            }
         }
 
         private string Intercept(string key, string rawSetting)

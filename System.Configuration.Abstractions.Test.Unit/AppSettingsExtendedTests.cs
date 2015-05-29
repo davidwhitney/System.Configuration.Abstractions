@@ -116,6 +116,83 @@ namespace System.Configuration.Abstractions.Test.Unit
             Assert.That(val, Is.EqualTo("default thing"));
         }
 
+        [TestCase("NotSoTrue", true)]
+        [TestCase("NotSoTrue", false)]
+        public void Setting_WhenExceptionRaisedAndBothActionsSupplied_PerformsAction(string boolValue, bool expectationAndDefault)
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", boolValue);
+
+            Func<bool> insteadOfThrowingConversionException = () => expectationAndDefault;
+            var insteadOfThrowingMissingKeyException = insteadOfThrowingConversionException;
+
+            var val = _wrapper.AppSetting("key-that-fails-cast", insteadOfThrowingMissingKeyException, insteadOfThrowingConversionException);
+
+            Assert.That(val, Is.EqualTo(expectationAndDefault));
+        }
+        
+        [TestCase("NotSoTrue", true)]
+        [TestCase("NotSoTrue", false)]
+        public void Setting_WhenExceptionRaisedAndConversionActionSupplied_PerformsAction(string boolValue, bool expectationAndDefault)
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", boolValue);
+
+            Func<bool> insteadOfThrowingConversionException = () => expectationAndDefault;
+
+            var val = _wrapper.AppSettingConvert("key-that-fails-cast", insteadOfThrowingConversionException);
+
+            Assert.That(val, Is.EqualTo(expectationAndDefault));
+        }        
+        
+        [TestCase("NotSoTrue", true)]
+        [TestCase("NotSoTrue", false)]
+        public void SettingSilent_WhenConversionFailsAndAnyExceptionActionSupplied_PerformsAction(string boolValue, bool expectationAndDefault)
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", boolValue);
+
+            Func<bool> insteadOfThrowingException = () => expectationAndDefault;
+
+            var val = _wrapper.AppSettingSilent("key-that-fails-cast", insteadOfThrowingException);
+
+            Assert.That(val, Is.EqualTo(expectationAndDefault));
+        }
+        
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SettingSilent_WhenMissingKeyFailsAndAnyExceptionActionSupplied_PerformsAction(bool expectedOutcome)
+        {
+            _underlyingConfiguration.Remove("missing-key");
+
+            Func<bool> insteadOfThrowingException = () => expectedOutcome;
+
+            var val = _wrapper.AppSettingSilent("missing-key", insteadOfThrowingException);
+
+            Assert.That(val, Is.EqualTo(expectedOutcome));
+        }
+
+        [Test]
+        public void SettingConvert_WhenExceptionRaisedAndActionNotSupplied_PerformsAction()
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", "NotSoTrue");
+
+            Assert.Throws<FormatException>(() => _wrapper.AppSettingConvert<bool>("key-that-fails-cast"));
+        }
+        
+        [Test]
+        public void SettingSilent_WhenExceptionRaisedAndActionNotSupplied_PerformsAction()
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", "NotSoTrue");
+
+            Assert.Throws<FormatException>(() => _wrapper.AppSettingSilent<bool>("key-that-fails-cast"));
+        }
+        
+        [Test]
+        public void Setting_WhenExceptionRaisedAndActionNotSupplied_PerformsAction()
+        {
+            _underlyingConfiguration.Add("key-that-fails-cast", "NotSoTrue");
+
+            Assert.Throws<FormatException>(() => _wrapper.AppSetting<bool>("key-that-fails-cast"));
+        }
+
         [Test]
         public void Setting_WhenSettingDoesNotExistAndActionSuppliedReturnsATypedThing_ReturnsTypedThing()
         {

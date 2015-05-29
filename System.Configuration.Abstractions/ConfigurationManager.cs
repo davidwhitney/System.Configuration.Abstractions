@@ -35,8 +35,8 @@ namespace System.Configuration.Abstractions
         {
         }
 
-        public ConfigurationManager(NameValueCollection appSettingss)
-            : this(appSettingss, System.Configuration.ConfigurationManager.ConnectionStrings)
+        public ConfigurationManager(NameValueCollection appSettings)
+            : this(appSettings, System.Configuration.ConfigurationManager.ConnectionStrings)
         {
         }
 
