@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration.Abstractions.TypeConverters;
 using System.Linq;
 
 namespace System.Configuration.Abstractions
@@ -9,6 +10,7 @@ namespace System.Configuration.Abstractions
         public IAppSettings AppSettings { get; set; }
         public IConnectionStrings ConnectionStrings { get; set; }
 
+        public static List<IConvertType> TypeConverters { get; private set; }
         public static List<IInterceptor> Interceptors { get; private set; }
         public static IEnumerable<IConfigurationInterceptor> ConfigurationInterceptors
         {
@@ -22,11 +24,17 @@ namespace System.Configuration.Abstractions
         static ConfigurationManager()
         {
             Interceptors = new List<IInterceptor>();
+            TypeConverters = new List<IConvertType>();
         }
 
         public static void RegisterInterceptors(params IInterceptor[] interceptors)
         {
             Interceptors.AddRange(interceptors);
+        }
+
+        public static void RegisterTypeConverters(params IConvertType[] converters)
+        {
+            TypeConverters.AddRange(converters);
         }
 
         public ConfigurationManager() :
@@ -42,7 +50,7 @@ namespace System.Configuration.Abstractions
 
         public ConfigurationManager(NameValueCollection appSettings, ConnectionStringSettingsCollection connectionStringSettings)
         {
-            AppSettings = new AppSettingsExtended(appSettings, ConfigurationInterceptors);
+            AppSettings = new AppSettingsExtended(appSettings, ConfigurationInterceptors, ConfigureDefaultTypeConverters());
             ConnectionStrings = new ConnectionStringsExtended(connectionStringSettings, AppSettings, ConnectionStringInterceptors);
         }
 
@@ -80,18 +88,19 @@ namespace System.Configuration.Abstractions
         {
             return System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, userLevel);
         }
-        
+
         public Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap)
         {
             return System.Configuration.ConfigurationManager.OpenMappedMachineConfiguration(fileMap);
         }
 
-        #if vLatest
+#if vLatest
         public Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap, ConfigurationUserLevel userLevel, bool preLoad)
         {
             return System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, userLevel, preLoad);
         }
-        #endif
+
+#endif
 
         /// <summary>
         /// Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper in new code
@@ -99,6 +108,19 @@ namespace System.Configuration.Abstractions
         public static IConfigurationManager Instance
         {
             get { return new ConfigurationManager(); }
+        }
+
+        private static IEnumerable<IConvertType> ConfigureDefaultTypeConverters()
+        {
+            // Defaults
+            var typeConverters = new List<IConvertType>
+            {
+                new UriConverter()
+            };
+
+            // User supplied
+            typeConverters.AddRange(TypeConverters);
+            return typeConverters;
         }
     }
 }

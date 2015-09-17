@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration.Abstractions.TypeConverters;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -10,11 +11,15 @@ namespace System.Configuration.Abstractions
     {
         public NameValueCollection Raw { get; private set; }
         private readonly IEnumerable<IConfigurationInterceptor> _interceptors;
+        private readonly IEnumerable<IConvertType> _typeConverters;
 
-        public AppSettingsExtended(NameValueCollection raw, IEnumerable<IConfigurationInterceptor> interceptors = null)
+        public AppSettingsExtended(NameValueCollection raw, 
+            IEnumerable<IConfigurationInterceptor> interceptors = null, 
+            IEnumerable<IConvertType> typeConverters = null)
         {
             Raw = raw;
             _interceptors = interceptors ?? new List<IConfigurationInterceptor>();
+            _typeConverters = typeConverters ?? new List<IConvertType>();
         }
 
         public TSettingsDto Map<TSettingsDto>() where TSettingsDto : class, new()
@@ -57,13 +62,11 @@ namespace System.Configuration.Abstractions
             try 
             {
                 rawSetting = Intercept(key, rawSetting);
-                
-                if (IsUriType(typeof(T)))
-                    return ConvertToUri<T>(rawSetting);
-                
-                var convertedSetting = (T) Convert.ChangeType(rawSetting, typeof (T));
 
-                return convertedSetting;
+                var converter = _typeConverters.FirstOrDefault(x => x.TargetType == typeof (T))
+                                ?? new PrimitiveConverter(typeof (T));
+
+                return (T) converter.Convert(rawSetting);
             }
             catch
             {
@@ -74,20 +77,6 @@ namespace System.Configuration.Abstractions
 
                 throw;
             }
-        }
-        
-        private static T ConvertToUri<T>(string rawSetting)
-        {
-            var uri = (T) (object) (new Uri(rawSetting));
-
-            return uri;
-        }
-
-        private static bool IsUriType(Type t)
-        {
-            var isUri = t == typeof(Uri);
-
-            return isUri;
         }
 
         private string Intercept(string key, string rawSetting)
