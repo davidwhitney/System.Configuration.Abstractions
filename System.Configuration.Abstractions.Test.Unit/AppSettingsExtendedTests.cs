@@ -248,6 +248,18 @@ namespace System.Configuration.Abstractions.Test.Unit
 
             Assert.That(val, Is.EqualTo(1.0m));
         }
+        
+        [Test]
+        public void Setting_RequestAUri_ConvertsSettingValue()
+        {
+            _underlyingConfiguration.Add("uriKey", "http://www.jazz.town.com");
+
+            var val = _wrapper.AppSetting<Uri>("uriKey");
+
+            var expected = new Uri("http://www.jazz.town.com");
+
+            Assert.That(val, Is.EqualTo(expected));
+        }
 
         [Test]
         public void Setting_RequestAnInvalidDouble_ThrowsUnderlyingException()
@@ -263,6 +275,14 @@ namespace System.Configuration.Abstractions.Test.Unit
             _underlyingConfiguration.Add("double", "NO DOUBLE HERE");
 
             Assert.Throws<FormatException>(() => _wrapper.AppSetting("double", () => 1.0));
+        }
+        
+        [Test]
+        public void Setting_RequestAnInvalidUriWithDefault_ThrowsUnderlyingException()
+        {
+            _underlyingConfiguration.Add("badUriKey", "bad.uri.com");
+
+            Assert.Throws<UriFormatException>(() => _wrapper.AppSetting("badUriKey", () => new Uri("http://www.jazz.town.com")));
         }
 
         [Test]
