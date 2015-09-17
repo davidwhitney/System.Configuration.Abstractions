@@ -57,8 +57,13 @@ namespace System.Configuration.Abstractions
             try 
             {
                 rawSetting = Intercept(key, rawSetting);
+                
+                if (IsUriType(typeof(T)))
+                    return ConvertToUri<T>(rawSetting);
+                
+                var convertedSetting = (T) Convert.ChangeType(rawSetting, typeof (T));
 
-                return (T) Convert.ChangeType(rawSetting, typeof (T));
+                return convertedSetting;
             }
             catch
             {
@@ -69,6 +74,20 @@ namespace System.Configuration.Abstractions
 
                 throw;
             }
+        }
+        
+        private static T ConvertToUri<T>(string rawSetting)
+        {
+            var uri = (T) (object) (new Uri(rawSetting));
+
+            return uri;
+        }
+
+        private static bool IsUriType(Type t)
+        {
+            var isUri = t == typeof(Uri);
+
+            return isUri;
         }
 
         private string Intercept(string key, string rawSetting)
