@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration.Abstractions.TypeConverters;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -10,11 +11,15 @@ namespace System.Configuration.Abstractions
     {
         public NameValueCollection Raw { get; private set; }
         private readonly IEnumerable<IConfigurationInterceptor> _interceptors;
+        private readonly IEnumerable<IConvertType> _typeConverters;
 
-        public AppSettingsExtended(NameValueCollection raw, IEnumerable<IConfigurationInterceptor> interceptors = null)
+        public AppSettingsExtended(NameValueCollection raw, 
+            IEnumerable<IConfigurationInterceptor> interceptors = null, 
+            IEnumerable<IConvertType> typeConverters = null)
         {
             Raw = raw;
             _interceptors = interceptors ?? new List<IConfigurationInterceptor>();
+            _typeConverters = typeConverters ?? new List<IConvertType>();
         }
 
         public TSettingsDto Map<TSettingsDto>() where TSettingsDto : class, new()
@@ -58,7 +63,10 @@ namespace System.Configuration.Abstractions
             {
                 rawSetting = Intercept(key, rawSetting);
 
-                return (T) Convert.ChangeType(rawSetting, typeof (T));
+                var converter = _typeConverters.FirstOrDefault(x => x.TargetType == typeof (T))
+                                ?? new PrimitiveConverter(typeof (T));
+
+                return (T) converter.Convert(rawSetting);
             }
             catch
             {

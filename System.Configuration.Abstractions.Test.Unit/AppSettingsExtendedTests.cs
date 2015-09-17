@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration.Abstractions.TypeConverters;
 using NUnit.Framework;
 
 namespace System.Configuration.Abstractions.Test.Unit
@@ -13,7 +14,7 @@ namespace System.Configuration.Abstractions.Test.Unit
         public void SetUp()
         {
             _underlyingConfiguration = new NameValueCollection {{"key-here", "junk"}};
-            _wrapper = new AppSettingsExtended(_underlyingConfiguration);
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, null, new[] {new UriConverter()} /* Default */);
         }
 
         [Test]
@@ -248,7 +249,29 @@ namespace System.Configuration.Abstractions.Test.Unit
 
             Assert.That(val, Is.EqualTo(1.0m));
         }
+        
+        [Test]
+        public void Setting_RequestAUri_ConvertsSettingValue()
+        {
+            _underlyingConfiguration.Add("uriKey", "http://www.jazz.town.com");
+            var val = _wrapper.AppSetting<Uri>("uriKey");
 
+            var expected = new Uri("http://www.jazz.town.com");
+
+            Assert.That(val, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Setting_RequestATypeWithAUserSuppliedConverter_Converts()
+        {
+            _underlyingConfiguration = new NameValueCollection { { "key-here", "junk" } };
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, null, new[] { new UserConverterExample() });
+
+            var val = _wrapper.AppSetting<UserType>("key-here");
+
+            Assert.That(val, Is.TypeOf<UserType>());
+        }
+        
         [Test]
         public void Setting_RequestAnInvalidDouble_ThrowsUnderlyingException()
         {
@@ -263,6 +286,14 @@ namespace System.Configuration.Abstractions.Test.Unit
             _underlyingConfiguration.Add("double", "NO DOUBLE HERE");
 
             Assert.Throws<FormatException>(() => _wrapper.AppSetting("double", () => 1.0));
+        }
+        
+        [Test]
+        public void Setting_RequestAnInvalidUriWithDefault_ThrowsUnderlyingException()
+        {
+            _underlyingConfiguration.Add("badUriKey", "bad.uri.com");
+
+            Assert.Throws<UriFormatException>(() => _wrapper.AppSetting("badUriKey", () => new Uri("http://www.jazz.town.com")));
         }
 
         [Test]
@@ -408,4 +439,11 @@ namespace System.Configuration.Abstractions.Test.Unit
             return originalValue;
         }
     }
+
+    public class UserConverterExample : IConvertType
+    {
+        public Type TargetType { get { return typeof(UserType); } }
+        public object Convert(string configurationValue) { return new UserType(); }
+    }
+    public class UserType { }
 }

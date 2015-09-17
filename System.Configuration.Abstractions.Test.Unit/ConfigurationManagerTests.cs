@@ -34,6 +34,16 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
+        public void RegisterTypeConverters_GivenConverter_AddedToCollection()
+        {
+            var converter = new UserConverterExample();
+
+            ConfigurationManager.RegisterTypeConverters(converter);
+
+            Assert.That(ConfigurationManager.TypeConverters[0], Is.EqualTo(converter));
+        }
+
+        [Test]
         public void AppSetting_WithInterceptor_CallsInterceptor()
         {
             var interceptor = new TestInterceptor();

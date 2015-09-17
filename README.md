@@ -64,7 +64,7 @@ Examples:
     var configMgr3 = new ConfigurationManager(new NameValueCollection {{"stringKey", "hello"}, {"intKey", "123"}});
     var valString3 = configMgr3.AppSettings["stringKey"];
     var valInt3 = configMgr3.AppSettings.AppSetting<int>("intKey");
-    
+
     // You can just switch out calls in place for backwards compatible behaviour
     var old = System.Configuration.ConfigurationManager.AppSettings["stringKey"];
     var @new = ConfigurationManager.Instance.AppSettings["stringKey"];
@@ -90,7 +90,7 @@ These strongly typed "AppSetting" helpers, will convert any primitive types that
 The following usage examples illustrate how to use these helpers:
 ```csharp
     // Before *******************************
-    
+
     var settingThatIsAnInteger = System.Configuration.ConfigurationManager.AppSettings["key"];
     int someInt;
     if (Int32.TryParse(settingThatIsAnInteger, out someInt))
@@ -118,12 +118,12 @@ The following usage examples illustrate how to use these helpers:
 	{
 		someBool = true;
 	}
-	
+
     // After ********************************
-    
+
     var withADefault = ConfigurationManager.Instance.AppSettings.AppSetting("key", () => 123);
     var withoutADefault = ConfigurationManager.Instance.AppSettings.AppSetting<int>("key");
-    
+
     var worksWithAllPrimatives = ConfigurationManager.Instance.AppSettings.AppSetting<bool>("otherKey");
     var worksWithNullables = ConfigurationManager.Instance.AppSettings.AppSetting<bool?>("otherKey");
 
@@ -131,7 +131,7 @@ The following usage examples illustrate how to use these helpers:
     {
         throw new MyCustomMissingKeyException();
     });
-    
+
     var customNotFoundHandler = ConfigurationManager.Instance.AppSettings.AppSetting<bool?>("otherKey", () =>
     {
         throw new MyCustomMissingKeyException();
@@ -145,17 +145,17 @@ The following usage examples illustrate how to use these helpers:
     {
         throw new MyCustomConversionException();
     });
-	
+
 	var defaultValue = true;
 	var silentHandler = configurationManagerExtended.AppSettingSilent<bool>("otherKey", () =>
     {
 		// Log Warning
 		// ...
-		
+
 		// Return Default
         return defaultValue;
     });
-```    
+```
 
 ## IConfigurationInterceptors
 
@@ -180,7 +180,7 @@ Interceptors fire for both the AppSetting helper, and the standard NameValueColl
 An obvious example would be the presence of an appSetting looking like this:
 ```xml
     <add key="my-key" value="{machineName}-something" />
-```    
+```
 You could easily add an interceptor to detect and fill in `{machineName}` from an environmental variable, keeping your configuration free of painful transformations.
 There are several other useful scenarios (auditing and logging, substitution, multi-tenancy) that interceptors could be useful in.
 
@@ -198,8 +198,29 @@ With this interceptor registered, this is true:
 ```csharp
 	var result = ConfigurationManager.AppSetting<string>("key2");
 	Console.WriteLine(result); // writes: valueOfOne-valueOfTwo
-```	
+```
 This interceptor will help you simplify transformed web or app config files that rely on similar / repetitive token replacements, by allowing you to override just one value, and have it nested across the rest of your configuration using the interceptor.
+
+# ITypeConverters
+
+Wired up just like `IConfigurationInterceptors` - TypeConverters let you specify custom type conversion logic.
+We include one TypeConverter by default - that converters to `Uri`. To implement your own type converter, you need to implement the following interface:
+
+```csharp
+public interface IConvertType
+{
+	Type TargetType { get; }
+	object Convert(string configurationValue);
+}
+```
+and register your converter by using
+
+```csharp
+var converter = new UserConverterExample();
+ConfigurationManager.RegisterTypeConverters(converter);
+```
+
+Your type converter will then be invoked whenever you request a mapping to the type that your converter supports.
 
 # Contributing
 
