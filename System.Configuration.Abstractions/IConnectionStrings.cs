@@ -1,6 +1,8 @@
-﻿namespace System.Configuration.Abstractions
+﻿using System.Collections.Generic;
+
+namespace System.Configuration.Abstractions
 {
-    public interface IConnectionStrings
+    public interface IConnectionStrings : IEnumerable<ConnectionStringSettings>
     {
         ConnectionStringSettings this[string name] { get; }
         ConnectionStringSettings this[int index] { get; }

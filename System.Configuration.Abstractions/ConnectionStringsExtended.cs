@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace System.Configuration.Abstractions
     public class ConnectionStringsExtended : IConnectionStrings
     {
         public ConnectionStringSettingsCollection Raw { get; private set; }
-       
+
         private readonly IEnumerable<IConnectionStringInterceptor> _interceptors;
         private readonly IAppSettings _appSettings;
 
@@ -62,6 +63,19 @@ namespace System.Configuration.Abstractions
             rawSetting = _interceptors.Aggregate(rawSetting,
                 (current, interceptor) => interceptor.OnConnectionStringRetrieve(_appSettings, this, current));
             return rawSetting;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.Raw.GetEnumerator();
+        }
+
+        public IEnumerator<ConnectionStringSettings> GetEnumerator()
+        {
+            for (int pos = 0; pos < Raw.Count; pos++)
+            {
+                yield return Raw[pos];
+            }
         }
     }
 }

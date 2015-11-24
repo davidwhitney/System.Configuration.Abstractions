@@ -13,7 +13,7 @@ namespace System.Configuration.Abstractions.Test.Unit
         [SetUp]
         public void SetUp()
         {
-            _fakeConfig = new ConnectionStringSettingsCollection {new ConnectionStringSettings("key-here", "junk")};
+            _fakeConfig = new ConnectionStringSettingsCollection { new ConnectionStringSettings("key-here", "junk") };
             _wrapper = new ConnectionStringsExtended(_fakeConfig, new AppSettingsExtended(new NameValueCollection()));
         }
 
@@ -29,7 +29,7 @@ namespace System.Configuration.Abstractions.Test.Unit
         public void Indexer_WhenSettingExists_RunsAnyRegisteredInterceptorsAndReturnsSetting()
         {
             var wrapper = new ConnectionStringsExtended(_fakeConfig, new AppSettingsExtended(new NameValueCollection()),
-                    new List<IConnectionStringInterceptor> {new TestConnectionStringInterceptor("return this")});
+                    new List<IConnectionStringInterceptor> { new TestConnectionStringInterceptor("return this") });
 
             var val = wrapper["key-here"];
 
@@ -54,30 +54,39 @@ namespace System.Configuration.Abstractions.Test.Unit
 
             Assert.That(val, Is.Null);
         }
-    }
 
-    public class NullConnectionStringInterceptor : IConnectionStringInterceptor
-    {
-        public ConnectionStringSettings OnConnectionStringRetrieve(IAppSettings appSettings, IConnectionStrings connectionStrings,
-            ConnectionStringSettings originalValue)
+        [Test]
+        public void ConnectionStrings_Are_Enumerable()
         {
-            return null;
-        }
-    }
+            _wrapper.Add(new ConnectionStringSettings("UK_Conn", "UK_DB_ConnString"));
 
-    public class TestConnectionStringInterceptor : IConnectionStringInterceptor
-    {
-        private readonly string _returnThis;
-
-        public TestConnectionStringInterceptor(string returnThis)
-        {
-            _returnThis = returnThis;
+            Assert.That(_wrapper.GetEnumerator(), Is.Not.Null);
+            Assert.That(_wrapper.Raw.Count, Is.EqualTo(2));
         }
 
-        public ConnectionStringSettings OnConnectionStringRetrieve(IAppSettings appSettings, IConnectionStrings connectionStrings,
-            ConnectionStringSettings originalValue)
+        public class NullConnectionStringInterceptor : IConnectionStringInterceptor
         {
-            return new ConnectionStringSettings(originalValue.Name, _returnThis, originalValue.ProviderName);
+            public ConnectionStringSettings OnConnectionStringRetrieve(IAppSettings appSettings, IConnectionStrings connectionStrings,
+                ConnectionStringSettings originalValue)
+            {
+                return null;
+            }
+        }
+
+        public class TestConnectionStringInterceptor : IConnectionStringInterceptor
+        {
+            private readonly string _returnThis;
+
+            public TestConnectionStringInterceptor(string returnThis)
+            {
+                _returnThis = returnThis;
+            }
+
+            public ConnectionStringSettings OnConnectionStringRetrieve(IAppSettings appSettings, IConnectionStrings connectionStrings,
+                ConnectionStringSettings originalValue)
+            {
+                return new ConnectionStringSettings(originalValue.Name, _returnThis, originalValue.ProviderName);
+            }
         }
     }
 }
