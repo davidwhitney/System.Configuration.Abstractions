@@ -74,7 +74,7 @@ namespace System.Configuration.Abstractions
         {
             for (int pos = 0; pos < Raw.Count; pos++)
             {
-                yield return Raw[pos];
+                yield return Intercept(Raw[pos]);
             }
         }
     }
