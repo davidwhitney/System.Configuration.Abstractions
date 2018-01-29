@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\System.Configuration.Abstractions\*.cs">
+      <Link>%(FileName)</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\System.Configuration.Abstractions\Interceptors\*.cs">
+      <Link>%(FileName)</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\System.Configuration.Abstractions\TypeConverters\*.cs">
+      <Link>%(FileName)</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
+  </ItemGroup>
+</Project>
