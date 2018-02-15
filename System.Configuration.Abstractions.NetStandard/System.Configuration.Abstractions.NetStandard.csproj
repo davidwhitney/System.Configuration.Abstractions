@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
-        <PackageId>System.Configuration.Abstractions</PackageId>
+        <PackageId>System.Configuration.Abstractions.NetStandard2</PackageId>
         <Authors>System.Configuration.Abstractions</Authors>
         <Company>David Whitney / Electric Head Software LTD</Company>
         <Product>David Whitney</Product>
