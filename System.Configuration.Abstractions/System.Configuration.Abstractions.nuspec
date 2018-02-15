@@ -17,10 +17,18 @@
 		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
     </frameworkAssemblies>
 	<releaseNotes>Added support for .NET40 - one of the .NET45 only interfaces is unavailable in the .NET40 port.</releaseNotes>
+		<dependencies>
+		<group targetFramework="netstandard2.0">
+			<dependency id="NETStandard.Library" version ="2.0.0" />
+			<dependency id="System.Configuration.ConfigurationManager" version="4.4.1" />
+		</group>
+	</dependencies>
   </metadata>
 	<files>	  
 	  <file src="..\System.Configuration.Abstractions.Net40\bin\Release\*.dll" target="lib\net40" /> 
 	  <file src="..\System.Configuration.Abstractions.Net40\bin\Release\*.pdb" target="lib\net40" /> 
+	  <file src="..\System.Configuration.Abstractions.NetStandard\bin\Release\netstandard2.0\*.dll" target="lib\netstandard2.0" /> 
+	  <file src="..\System.Configuration.Abstractions.NetStandard\bin\Release\netstandard2.0\*.pdb" target="lib\netstandard2.0" /> 
 	  <file src="bin\Release\*.pdb" target="lib\net45" /> 
-	</files> 
+	</files>
 </package>
