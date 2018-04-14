@@ -2,7 +2,7 @@
 {
     public class PrimitiveConverter : IConvertType
     {
-        public Type TargetType { get; private set; }
+        public Type TargetType { get; }
 
         public PrimitiveConverter(Type targetType)
         {
@@ -11,6 +11,11 @@
 
         public object Convert(string configurationValue)
         {
+            if (TargetType.IsEnum)
+            {
+                return Enum.Parse(TargetType, configurationValue, true);
+            }
+
             return System.Convert.ChangeType(configurationValue, TargetType);
         }
     }
