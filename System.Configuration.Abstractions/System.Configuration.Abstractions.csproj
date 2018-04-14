@@ -43,6 +43,7 @@
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="AppSettingsExtended.cs" />
     <Compile Include="ConnectionStringsExtended.cs" />
+    <Compile Include="TypeConverters\GuidConverter.cs" />
     <Compile Include="TypeConverters\PrimitiveConverter.cs" />
     <Compile Include="IAppSettings.cs" />
     <Compile Include="IAppSettingsExtended.cs" />

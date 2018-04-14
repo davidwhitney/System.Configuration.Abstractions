@@ -124,7 +124,8 @@ namespace System.Configuration.Abstractions
             // Defaults
             var typeConverters = new List<IConvertType>
             {
-                new UriConverter()
+                new UriConverter(),
+                new GuidConverter()
             };
 
             // User supplied
