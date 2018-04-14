@@ -437,6 +437,59 @@ namespace System.Configuration.Abstractions.Test.Unit
 
             Assert.That(_underlyingConfiguration, Is.Empty);
         }
+        
+        [Test]
+        public void Setting_WhenCastFailsAndActionNotSupplied_Throws()
+        {
+            var expected = new Guid("71a9bb5c-6f5d-4e18-8609-5f729aa352e6");
+            _underlyingConfiguration.Add("someGuidVal", expected.ToString());
+
+            Assert.Throws<InvalidCastException>(() => _wrapper.AppSetting<Guid>("someGuidVal"));
+        }
+
+        [Test]
+        public void Setting_WhenCastFailsAndActionSupplied_PerformsAction()
+        {
+            var expected = Guid.Empty;
+            _underlyingConfiguration.Add("someGuidVal", "bad-guid");
+
+            var val = _wrapper.AppSetting("someGuidVal", whenConversionFailsInsteadOfThrowingDefaultException: () => Guid.Empty);
+
+            Assert.That(val, Is.TypeOf<Guid>());
+            Assert.That(val, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Setting_WhenValueIsMissingAndActionSupplied_PerformsAction()
+        {
+            var expected = Guid.Empty;
+            _underlyingConfiguration.Add("anotherGuidVal", "bad-guid");
+
+            var val = _wrapper.AppSetting("someMissingGuidVal", () => Guid.Empty);
+
+            Assert.That(val, Is.TypeOf<Guid>());
+            Assert.That(val, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Setting_WhenValueIsMissingAndActionSuppliedOfTypeNull_PerformsAction()
+        {
+            _underlyingConfiguration.Add("anotherGuidVal", "bad-guid");
+
+            var val = _wrapper.AppSetting<Guid?>("someMissingGuidVal", () => null);
+
+            Assert.That(val, Is.Null);
+        }
+
+        [Test]
+        public void Setting_WhenCastFailsAndActionSuppliedOfTypeNull_PerformsAction()
+        {
+            _underlyingConfiguration.Add("someGuidVal", "bad-guid");
+            
+            var val = _wrapper.AppSetting<Guid?>("someGuidVal", whenConversionFailsInsteadOfThrowingDefaultException: () => null);
+
+            Assert.That(val, Is.Null);
+        }
     }
 
     public class TestInterceptor : IConfigurationInterceptor
