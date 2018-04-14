@@ -1,4 +1,7 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 
 namespace System.Configuration.Abstractions.Test.Unit
@@ -54,6 +57,69 @@ namespace System.Configuration.Abstractions.Test.Unit
             cfgMgr.AppSettings.AppSetting("key");
 
             Assert.That(interceptor.Called, Is.True);
+        }
+
+        [Test, Repeat(10)]
+        public void RegisterTypeConverters_WhenRunInConcurrentEnvironment_DoesNotThrow()
+        {
+            var converter = new ConverterForConcurrencyTest();
+            var threadExceptioned = false;
+            Exception exception = null;
+
+            var addAction = new Action(() =>
+            {
+                try
+                {
+                    for (var i = 0; i < 99999; i++)
+                    {
+                        ConfigurationManager.RegisterTypeConverters(converter);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                    threadExceptioned = true;
+                }
+            });
+
+            Enumerable.Range(0, 50).Select(i => new Thread(() => addAction())).ToList().ForEach(t => t.Start());
+            Thread.Sleep(500);
+            
+            Assert.That(threadExceptioned, Is.False, exception?.Message);
+        }
+
+        [Test, Repeat(10)]
+        public void RegisterInterceptors_WhenRunInConcurrentEnvironment_DoesNotThrow()
+        {
+            var threadExceptioned = false;
+            Exception exception = null;
+
+            var addAction = new Action(() =>
+            {
+                try
+                {
+                    for (var i = 0; i < 99999; i++)
+                    {
+                        ConfigurationManager.RegisterInterceptors(new TestInterceptor());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                    threadExceptioned = true;
+                }
+            });
+
+            Enumerable.Range(0, 50).Select(i => new Thread(() => addAction())).ToList().ForEach(t => t.Start());
+            Thread.Sleep(500);
+            
+            Assert.That(threadExceptioned, Is.False, exception?.Message);
+        }
+
+        private class ConverterForConcurrencyTest : IConvertType
+        {
+            public Type TargetType { get { return typeof(UserType); } }
+            public object Convert(string configurationValue) { return new UserType(); }
         }
 
         private class TestInterceptor : IConfigurationInterceptor
