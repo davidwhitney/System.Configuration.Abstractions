@@ -29,12 +29,24 @@ namespace System.Configuration.Abstractions
 
         public static void RegisterInterceptors(params IInterceptor[] interceptors)
         {
-            Interceptors.AddRange(interceptors);
+            lock (Interceptors)
+            {
+                foreach (var interecptor in interceptors)
+                {
+                    Interceptors.Add(interecptor);
+                }
+            }
         }
 
         public static void RegisterTypeConverters(params IConvertType[] converters)
         {
-            TypeConverters.AddRange(converters);
+            lock (TypeConverters)
+            {
+                foreach (var converter in converters)
+                {
+                    TypeConverters.Add(converter);
+                }
+            }
         }
 
         public ConfigurationManager() :
