@@ -10,8 +10,8 @@ namespace System.Configuration.Abstractions
         public IAppSettings AppSettings { get; set; }
         public IConnectionStrings ConnectionStrings { get; set; }
 
-        public static List<IConvertType> TypeConverters { get; private set; }
-        public static List<IInterceptor> Interceptors { get; private set; }
+        public static List<IConvertType> TypeConverters { get; }
+        public static List<IInterceptor> Interceptors { get; }
         public static IEnumerable<IConfigurationInterceptor> ConfigurationInterceptors
         {
             get { return Interceptors.Where(x => x is IConfigurationInterceptor).Cast<IConfigurationInterceptor>(); }
@@ -117,10 +117,7 @@ namespace System.Configuration.Abstractions
         /// <summary>
         /// Exists for in-place switching of System.Configuration.ConfigurationManager - avoid this static helper in new code
         /// </summary>
-        public static IConfigurationManager Instance
-        {
-            get { return new ConfigurationManager(); }
-        }
+        public static IConfigurationManager Instance => new ConfigurationManager();
 
         private static IEnumerable<IConvertType> ConfigureDefaultTypeConverters()
         {

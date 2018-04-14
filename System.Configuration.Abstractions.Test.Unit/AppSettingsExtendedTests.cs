@@ -240,6 +240,28 @@ namespace System.Configuration.Abstractions.Test.Unit
             Assert.That(val, Is.EqualTo(expectation));
         }
 
+        private enum TestEnum {  Value1 }
+
+        [Test]
+        public void Setting_RequestAnEnum_ConvertsToEnum()
+        {
+            _underlyingConfiguration.Add("enum", "Value1");
+
+            var val = _wrapper.AppSetting<TestEnum>("enum");
+
+            Assert.That(val, Is.EqualTo(TestEnum.Value1));
+        }
+
+        [Test]
+        public void Setting_RequestAnEnumAsInt_ConvertsToEnum()
+        {
+            _underlyingConfiguration.Add("enum", "0");
+
+            var val = _wrapper.AppSetting<TestEnum>("enum");
+
+            Assert.That(val, Is.EqualTo(TestEnum.Value1));
+        }
+
         [Test]
         public void Setting_RequestADouble_ConvertsSettingValue()
         {
@@ -442,7 +464,7 @@ namespace System.Configuration.Abstractions.Test.Unit
 
     public class UserConverterExample : IConvertType
     {
-        public Type TargetType { get { return typeof(UserType); } }
+        public Type TargetType => typeof(UserType);
         public object Convert(string configurationValue) { return new UserType(); }
     }
     public class UserType { }

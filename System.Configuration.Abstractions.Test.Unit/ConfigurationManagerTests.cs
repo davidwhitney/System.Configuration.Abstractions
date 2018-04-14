@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
@@ -59,7 +58,7 @@ namespace System.Configuration.Abstractions.Test.Unit
             Assert.That(interceptor.Called, Is.True);
         }
 
-        [Test, Repeat(10)]
+        [Test]
         public void RegisterTypeConverters_WhenRunInConcurrentEnvironment_DoesNotThrow()
         {
             var converter = new ConverterForConcurrencyTest();
@@ -88,7 +87,7 @@ namespace System.Configuration.Abstractions.Test.Unit
             Assert.That(threadExceptioned, Is.False, exception?.Message);
         }
 
-        [Test, Repeat(10)]
+        [Test]
         public void RegisterInterceptors_WhenRunInConcurrentEnvironment_DoesNotThrow()
         {
             var threadExceptioned = false;
@@ -118,7 +117,7 @@ namespace System.Configuration.Abstractions.Test.Unit
 
         private class ConverterForConcurrencyTest : IConvertType
         {
-            public Type TargetType { get { return typeof(UserType); } }
+            public Type TargetType => typeof(UserType);
             public object Convert(string configurationValue) { return new UserType(); }
         }
 
