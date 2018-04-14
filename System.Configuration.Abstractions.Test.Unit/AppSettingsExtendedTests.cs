@@ -14,7 +14,11 @@ namespace System.Configuration.Abstractions.Test.Unit
         public void SetUp()
         {
             _underlyingConfiguration = new NameValueCollection {{"key-here", "junk"}};
-            _wrapper = new AppSettingsExtended(_underlyingConfiguration, null, new[] {new UriConverter()} /* Default */);
+            _wrapper = new AppSettingsExtended(_underlyingConfiguration, null, new List<IConvertType>
+            {
+                new UriConverter(),
+                new GuidConverter()
+            } /* Default */);
         }
 
         [Test]
@@ -444,7 +448,9 @@ namespace System.Configuration.Abstractions.Test.Unit
             var expected = new Guid("71a9bb5c-6f5d-4e18-8609-5f729aa352e6");
             _underlyingConfiguration.Add("someGuidVal", expected.ToString());
 
-            Assert.Throws<InvalidCastException>(() => _wrapper.AppSetting<Guid>("someGuidVal"));
+            var parsed = _wrapper.AppSetting<Guid>("someGuidVal");
+
+            Assert.That(parsed.ToString(), Is.EqualTo(expected.ToString()));
         }
 
         [Test]
