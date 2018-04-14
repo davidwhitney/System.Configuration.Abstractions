@@ -11,12 +11,9 @@
 
         public object Convert(string configurationValue)
         {
-            if (TargetType.IsEnum)
-            {
-                return Enum.Parse(TargetType, configurationValue, true);
-            }
-
-            return System.Convert.ChangeType(configurationValue, TargetType);
+            return TargetType.IsEnum
+                ? Enum.Parse(TargetType, configurationValue, true)
+                : System.Convert.ChangeType(configurationValue, TargetType);
         }
     }
 }
