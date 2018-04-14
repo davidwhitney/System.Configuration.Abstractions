@@ -253,6 +253,16 @@ namespace System.Configuration.Abstractions.Test.Unit
         }
 
         [Test]
+        public void Setting_RequestAnEnumAsInt_ConvertsToEnum()
+        {
+            _underlyingConfiguration.Add("enum", "0");
+
+            var val = _wrapper.AppSetting<TestEnum>("enum");
+
+            Assert.That(val, Is.EqualTo(TestEnum.Value1));
+        }
+
+        [Test]
         public void Setting_RequestADouble_ConvertsSettingValue()
         {
             _underlyingConfiguration.Add("double", "1.0");

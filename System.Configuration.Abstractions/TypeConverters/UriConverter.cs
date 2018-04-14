@@ -2,7 +2,7 @@
 {
     public class UriConverter : IConvertType
     {
-        public Type TargetType { get { return typeof (Uri); } }
+        public Type TargetType => typeof (Uri);
 
         public object Convert(string configurationValue)
         {
