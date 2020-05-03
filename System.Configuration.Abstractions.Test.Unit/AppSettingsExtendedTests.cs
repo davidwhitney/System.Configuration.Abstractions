@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace System.Configuration.Abstractions.Test.Unit
 {
+    [TestFixture]
     public class AppSettingsExtendedTests
     {
         private NameValueCollection _underlyingConfiguration;
@@ -389,7 +390,7 @@ namespace System.Configuration.Abstractions.Test.Unit
 
             var ex = Assert.Throws<ConfigurationErrorsException>(() => _wrapper.AppSetting<string>(key));
 
-            Assert.That(ex.Message, Is.StringContaining(key));
+            Assert.That(ex.Message, Does.Contain(key));
         }
 
         [Test]
