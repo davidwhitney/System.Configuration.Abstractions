@@ -24,7 +24,7 @@ jobs:
       run: dotnet build System.Configuration.Abstractions.sln --configuration Release
 
     - name: Create full framework nuget package
-      run: dotnet pack "System.Configuration.Abstractions\System.Configuration.Abstractions.csproj" --configuration Release --include-symbols --no-build
+      run: .nuget\nuget pack "System.Configuration.Abstractions\System.Configuration.Abstractions.csproj" -Properties Configuration=Release
       
     - name: Create netstandard nuget package
       run: dotnet pack "System.Configuration.Abstractions.NetStandard\System.Configuration.Abstractions.NetStandard.csproj" --configuration Release --include-symbols --no-build
