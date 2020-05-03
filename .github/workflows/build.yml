@@ -24,4 +24,4 @@ jobs:
       run: dotnet build System.Configuration.Abstractions.sln --configuration Release
 
     - name: Create nuget package
-      run: create-package.bat
+      run: .nuget\nuget pack "System.Configuration.Abstractions\System.Configuration.Abstractions.csproj" -Properties Configuration=Release
